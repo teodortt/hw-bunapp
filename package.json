@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "expo start --dev-client --clear",
     "dev:web": "expo start -c --web",
+    "dev:ios": "expo start -c --ios",
     "dev:android": "expo start -c --android",
     "android": "expo run:android",
     "ios": "expo run:ios",
