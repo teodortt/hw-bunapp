@@ -113,22 +113,26 @@ export default function RootLayout() {
           <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
           <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheetModalProvider>
-              <Stack >
+              <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen options={{
-                  headerShadowVisible: false,
-                }} name="habits/archive" />
-                <Stack.Screen options={{
-                  headerShadowVisible: false,
-                }} name="habits/[id]" />
+                <Stack.Screen
+                  options={{
+                    headerShadowVisible: false,
+                  }}
+                  name="habits/archive"
+                />
+                <Stack.Screen
+                  options={{
+                    headerShadowVisible: false,
+                  }}
+                  name="habits/[id]"
+                />
               </Stack>
             </BottomSheetModalProvider>
           </GestureHandlerRootView>
-
         </ThemeProvider>
       </DatabaseProvider>
       <PortalHost />
     </>
-
   );
 }

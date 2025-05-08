@@ -1,61 +1,180 @@
-import * as React from 'react';
-import { Linking, Platform } from 'react-native';
-import List, { ListHeader } from "@/components/ui/list";
-import ListItem from "@/components/ui/list-item";
-import { Muted } from "@/components/ui/typography";
-import { ScrollView } from 'react-native-gesture-handler';
-import { Archive, Bell, BookOpen, Send, Shield, Star } from '@/lib/icons';
-import * as WebBrowser from "expo-web-browser";
+import {
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 
-import { ThemeSettingItem } from '@/components/settings/ThemeItem';
-import { NotificationItem } from '@/components/settings/NotificationItem';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  RefreshControl,
+  Text,
+  TouchableOpacity,
+  View,
+  Alert,
+  ScrollView,
+  TextInput,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { EmptyState, SearchInput } from "../examples/components";
+import { images } from "../examples/constants";
+import useApi, { getOffers } from "../examples/useApi";
+import { Home } from "@/lib/icons/Home";
 
-export default function Settings() {
-  const openExternalURL = (url: string) => {
-    if (Platform.OS === "web") {
-      Linking.openURL(url);
-    } else {
-      WebBrowser.openBrowserAsync(url);
-    }
+const OfferCard = ({ item }: any) => (
+  <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
+    <Image
+      source={{
+        // uri: `https://www.happyworld.bg${item.image.meta.download_url}`,
+        uri: `https://picsum.photos/300`,
+      }}
+      className="w-36 h-36"
+    />
+    <View className="flex-1 p-2 pl-4">
+      <View className="flex-row justify-between items-center">
+        <Text className="text-lg font-bold text-white">{item.position}</Text>
+      </View>
+      <View className="flex-row items-center gap-2">
+        <Home className="text-foreground w-4 h-4" />
+        <Text className="text-sm text-gray-300">
+          {item.city}, {item.state}
+        </Text>
+      </View>
+
+      <View className="flex-row pt-2 gap-2 items-center">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          className="flex-1"
+        >
+          <View className="flex-row items-center gap-2">
+            {item.featuresList?.map(
+              (
+                feature:
+                  | string
+                  | number
+                  | boolean
+                  | ReactElement<any, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | null
+                  | undefined,
+                index: Key | null | undefined
+              ) => (
+                <Text
+                  key={index}
+                  className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
+                >
+                  {feature}
+                </Text>
+              )
+            )}
+          </View>
+        </ScrollView>
+      </View>
+      <View className="flex-row justify-between items-center mt-4">
+        <Text className="text-lg font-bold text-white">
+          ${item.hourly_rate}
+          {item.tips_available && " + tips"}
+        </Text>
+        <Text className="text-xs text-red-500">
+          {item.unavailable && "Sold out"}
+        </Text>
+      </View>
+    </View>
+  </View>
+);
+
+const Offers = () => {
+  const { data: offers, loading, refetch } = useApi(getOffers);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
   };
+
+  // Show loading spinner while fetching offers
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
+        <ActivityIndicator size="large" color="#fff" />
+        <Text className="text-white mt-4">Loading offers...</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <ScrollView className="flex-1 w-full px-6 bg-background pt-4 gap-y-6">
+    <SafeAreaView className="bg-primary h-full" edges={{ top: "additive" }}>
+      <FlatList
+        data={(offers as any)?.items}
+        // style={{ top: insets.top - 30 }}
+        keyExtractor={(item) => `${(item as any).meta.type}.${item.id}`}
+        renderItem={({ item }) => <OfferCard item={item} />}
+        ListHeaderComponent={() => (
+          <View>
+            <View className="flex flex-row justify-between items-center p-4">
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    // TODO: reload the data
+                    Alert.alert("No values stored under that key.");
+                    console.log("No values are stored under that key.");
+                  }}
+                >
+                  <Text className="font-medium text-sm text-gray-100">
+                    Work and Travel
+                  </Text>
 
-      <List>
-        <ListHeader>
-          <Muted>App</Muted>
-        </ListHeader>
-        <ThemeSettingItem />
-        {
-          Platform.OS !== "web" && <NotificationItem />
+                  <Text className="text-2xl font-semibold text-white">
+                    Работни оферти
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View className="mt-1.5">
+                <Image
+                  source={images.logoSmall}
+                  className="w-12 h-12"
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+            {/* <View className="flex flex-row items-center w-full p-4 h-16 bg-red-600 rounded-2xl border-2 border-gray-500 focus:border-secondary">
+              <TextInput
+                className="text-base mt-0.5 text-white flex-1 font-pregular"
+                value={"query"}
+                placeholder="Търсене"
+                placeholderTextColor="#CDCDE0"
+                onChangeText={(e) => {}}
+              />
+              Изберете категория, за да видите наличните оферти
+            </View> */}
+            <SearchInput initialQuery={undefined} />
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="Няма налични оферти за тази категория"
+            subtitle="Няма намерени оферти"
+          />
+        )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            title="Refreshing..."
+            tintColor="#fff"
+            titleColor="#fff"
+          />
         }
-        <ListHeader className='pt-8'>
-          <Muted>GENERAL</Muted>
-        </ListHeader>
-        <ListItem
-          itemLeft={(props) => <Star {...props} />} // props adds size and color attributes
-          label="Give us a start"
-          onPress={() => openExternalURL("https://github.com/expo-starter/expo-template")}
-        />
-        <ListItem
-          itemLeft={(props) => <Send {...props} />} // props adds size and color attributes
-          label="Send Feedback"
-          onPress={() => openExternalURL("https://expostarter.com")}
-
-
-        />
-        <ListItem
-          itemLeft={(props) => <Shield {...props} />} // props adds size and color attributes
-          label="Privacy Policy"
-
-          onPress={() => openExternalURL("https://expostarter.com")}
-        />
-        <ListItem
-          itemLeft={(props) => <BookOpen {...props} />} // props adds size and color attributes
-          label="Terms of service"
-          onPress={() => openExternalURL("https://expostarter.com")}
-        />
-      </List>
-    </ScrollView>
+      />
+    </SafeAreaView>
   );
-}
+};
+
+export default Offers;
