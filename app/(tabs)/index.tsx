@@ -1,21 +1,21 @@
-import {View, Pressable} from "react-native";
-import {useScrollToTop} from "@react-navigation/native";
-import {FlashList} from "@shopify/flash-list";
-import {eq} from "drizzle-orm";
-import {Link, Stack} from "expo-router";
+import { View, Pressable } from "react-native";
+import { useScrollToTop } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { eq } from "drizzle-orm";
+import { Link, Stack } from "expo-router";
 import * as React from "react";
-import {useLiveQuery} from "drizzle-orm/expo-sqlite";
+import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
-import {Text} from "@/components/ui/text";
-import {habitTable} from "@/db/schema";
-import {Plus} from "@/components/Icons";
-import {useMigrationHelper} from "@/db/drizzle";
-import {useDatabase} from "@/db/provider";
-import {HabitCard} from "@/components/habit";
-import type {Habit} from "@/lib/storage";
+import { Text } from "@/components/ui/text";
+import { habitTable } from "@/db/schema";
+import { Plus } from "@/components/Icons";
+import { useMigrationHelper } from "@/db/drizzle";
+import { useDatabase } from "@/db/provider";
+import { HabitCard } from "@/components/habit";
+import type { Habit } from "@/lib/storage";
 
 export default function Home() {
-  const {success, error} = useMigrationHelper();
+  const { success, error } = useMigrationHelper();
 
   if (error) {
     return (
@@ -36,17 +36,17 @@ export default function Home() {
 }
 
 function ScreenContent() {
-  const {db} = useDatabase();
-  const {data: habits, error} = useLiveQuery(
-    db?.select().from(habitTable).where(eq(habitTable.archived, false)),
+  const { db } = useDatabase();
+  const { data: habits, error } = useLiveQuery(
+    db?.select().from(habitTable).where(eq(habitTable.archived, false))
   );
 
   const ref = React.useRef(null);
   useScrollToTop(ref);
 
   const renderItem = React.useCallback(
-    ({item}: {item: Habit}) => <HabitCard {...item} />,
-    [],
+    ({ item }: { item: Habit }) => <HabitCard {...item} />,
+    []
   );
 
   if (error) {
@@ -79,9 +79,7 @@ function ScreenContent() {
               <Text className="text-sm font-mono text-muted-foreground bg-muted">
                 bun db:generate
               </Text>
-              <Text className="text-sm px-1">
-                then
-              </Text>
+              <Text className="text-sm px-1">then</Text>
               <Text className="text-sm font-mono text-muted-foreground bg-muted">
                 bun migrate
               </Text>
@@ -91,7 +89,7 @@ function ScreenContent() {
         ItemSeparatorComponent={() => <View className="p-2" />}
         data={habits}
         renderItem={renderItem}
-        keyExtractor={(_, index) => `item-${ index }`}
+        keyExtractor={(_, index) => `item-${index}`}
         ListFooterComponent={<View className="py-4" />}
       />
       <View className="absolute web:bottom-20 bottom-10 right-8">

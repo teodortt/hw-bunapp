@@ -1,6 +1,6 @@
 import { View, ActivityIndicator, Dimensions, Platform } from "react-native";
 
-const Loader = ({ isLoading }) => {
+export const Loader = ({ isLoading }: any) => {
   const osName = Platform.OS;
   const screenHeight = Dimensions.get("screen").height;
 
@@ -21,5 +21,3 @@ const Loader = ({ isLoading }) => {
     </View>
   );
 };
-
-export default Loader;

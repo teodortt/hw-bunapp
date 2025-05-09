@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 
 import { icons } from "../constants";
 
-const VideoCard = ({ title, creator, thumbnail }) => {
+export const VideoCard = ({ title, creator, thumbnail }: any) => {
   return (
     <View className="flex flex-col items-center px-4 mb-14">
       <View className="flex flex-row gap-3 items-start">
@@ -44,5 +44,3 @@ const VideoCard = ({ title, creator, thumbnail }) => {
     </View>
   );
 };
-
-export default VideoCard;

@@ -10,7 +10,7 @@ export const unstable_settings = {
   initialRouteName: "index",
 };
 
-import { images } from "../examples/constants";
+import { images } from "../../components/examples/constants";
 
 export default function TabLayout() {
   return (

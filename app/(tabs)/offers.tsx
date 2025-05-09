@@ -17,13 +17,13 @@ import {
   View,
   Alert,
   ScrollView,
-  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { EmptyState, SearchInput } from "../examples/components";
-import { images } from "../examples/constants";
-import useApi, { getOffers } from "../examples/useApi";
+import { EmptyState } from "../../components/examples/components";
+import { images } from "../../components/examples/constants";
+import useApi, { getOffers } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
+import { SearchInput } from "@/components/examples/components/searchInput";
 
 const OfferCard = ({ item }: any) => (
   <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
@@ -144,17 +144,10 @@ const Offers = () => {
                 />
               </View>
             </View>
-            {/* <View className="flex flex-row items-center w-full p-4 h-16 bg-red-600 rounded-2xl border-2 border-gray-500 focus:border-secondary">
-              <TextInput
-                className="text-base mt-0.5 text-white flex-1 font-pregular"
-                value={"query"}
-                placeholder="Търсене"
-                placeholderTextColor="#CDCDE0"
-                onChangeText={(e) => {}}
-              />
-              Изберете категория, за да видите наличните оферти
-            </View> */}
-            <SearchInput initialQuery={undefined} />
+
+            <View className="pb-4 px-1">
+              <SearchInput initialQuery={"undefined"} />
+            </View>
           </View>
         )}
         ListEmptyComponent={() => (

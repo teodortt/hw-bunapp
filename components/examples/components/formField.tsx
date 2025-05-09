@@ -3,14 +3,14 @@ import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
 
 import { icons } from "../constants";
 
-const FormField = ({
+export const FormField = ({
   title,
   value,
   placeholder,
   handleChangeText,
   otherStyles,
   ...props
-}) => {
+}: any) => {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -41,5 +41,3 @@ const FormField = ({
     </View>
   );
 };
-
-export default FormField;
