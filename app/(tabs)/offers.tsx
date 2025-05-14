@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "../../components/examples/components";
@@ -76,6 +77,11 @@ const Offers = () => {
     )
   );
 
+  // const offerPosition = offers?.map((offer) => offer.position);
+  // const offerState = offers?.map((offer) => offer.state);
+  // const offerTipsAvailable = offers?.map((offer) => offer.tips_available);
+  // const offerUnavailable = offers?.map((offer) => offer.unavailable);
+
   if (!offers && loading) {
     return (
       <SafeAreaView className="bg-primary h-full flex items-center justify-center">
@@ -93,8 +99,14 @@ const Offers = () => {
         keyExtractor={(item) => `${item.id}${item.meta?.link}`}
         className="native:overflow-hidden rounded-t-lg"
         estimatedItemSize={144}
-        refreshing={loading}
-        onRefresh={refetch}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refetch}
+            colors={["#ff9f36"]} // Android spinner color(s)
+            tintColor="#ff9f36" // iOS spinner color
+          />
+        }
         ListHeaderComponent={() => (
           <View>
             <View className="flex flex-row justify-between items-center p-4">
@@ -119,7 +131,7 @@ const Offers = () => {
             </View>
 
             <View className="pb-4 px-1">
-              <SearchInput initialQuery={filter} />
+              <SearchInput initialQuery={filter} offers={offers || []} />
             </View>
           </View>
         )}

@@ -18,6 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Option } from "../primitives/select";
+import { Offer } from "../examples/useApi";
+import { router, useLocalSearchParams } from "expo-router";
 type ItemData = {
   title: string;
   subtitle: string;
@@ -25,7 +28,7 @@ type ItemData = {
   icon: JSX.Element;
 };
 
-export const Filters = () => {
+export const Filters = ({ offers }: { offers: Offer[] }) => {
   const themes: ItemData[] = useMemo(
     () => [
       {
@@ -57,46 +60,77 @@ export const Filters = () => {
         </BottomSheetHeader>
         <BottomSheetView className="gap-5 pt-6 bg-primary">
           {themes.map((theme) => (
-            <View key={theme.title} className="flex-row gap-2">
-              <Select className="flex-row">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue
-                    className="text-foreground text-sm native:text-lg"
-                    placeholder="Работна позиция"
-                  />
-                </SelectTrigger>
-                <SelectContent className="w-[180px]">
-                  <SelectGroup>
-                    <SelectLabel>Работна позиция</SelectLabel>
-                    <SelectItem label="Server" value="server">
-                      Server
-                    </SelectItem>
-                    <SelectItem label="ServerA" value="serverA">
-                      Server
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              <Select className="flex-row">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue
-                    className="text-foreground text-sm native:text-lg"
-                    placeholder="Работна позиция"
-                  />
-                </SelectTrigger>
-                <SelectContent className="w-[180px]">
-                  <SelectGroup>
-                    <SelectLabel>Работна позиция</SelectLabel>
-                    <SelectItem label="Server" value="server">
-                      Server
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+            <View
+              key={theme.title}
+              className="flex-row gap-2 justify-between px-4"
+            >
+              <SelectFilter
+                placeholder="Локация"
+                options={offers.map((offer) => ({
+                  label: offer.state,
+                  value: offer.state,
+                }))}
+              />
+              <SelectFilter
+                placeholder="Работна позиция"
+                options={offers.map((offer) => ({
+                  label: offer.position,
+                  value: offer.position,
+                }))}
+              />
             </View>
           ))}
         </BottomSheetView>
       </BottomSheetContent>
     </BottomSheet>
+  );
+};
+
+const SelectFilter = ({
+  placeholder,
+  options,
+}: {
+  placeholder: string;
+  options: Option[];
+}) => {
+  const query = useLocalSearchParams()[placeholder];
+
+  const queryValue = typeof query === "string" ? query : "";
+
+  const value = useMemo(() => {
+    const selectedOption = options.find(
+      (option) => option?.value === queryValue
+    );
+    return selectedOption;
+  }, [queryValue, options]);
+
+  const handleSelect = (option: Option) => {
+    if (!option) return;
+    router.setParams({ placeholder: option.value });
+  };
+
+  return (
+    <Select className="flex-row" value={value} onValueChange={handleSelect}>
+      <SelectTrigger className="w-[150px]">
+        <SelectValue
+          className="text-foreground text-sm native:text-lg"
+          placeholder={placeholder}
+        />
+      </SelectTrigger>
+      <SelectContent className="w-[150px]">
+        {options.map(
+          (option, i) =>
+            option && (
+              <SelectItem
+                key={`${option.value}-${i}`}
+                value={option.value}
+                label={option.label}
+              >
+                {option.label}
+              </SelectItem>
+            )
+        )}
+      </SelectContent>
+    </Select>
   );
 };

@@ -3,8 +3,15 @@ import { icons } from "@/components/examples/constants";
 import { Filters } from "@/components/settings/Filters";
 import { useState } from "react";
 import { router } from "expo-router";
+import { Offer } from "../useApi";
 
-export const SearchInput = ({ initialQuery }: { initialQuery?: string }) => {
+export const SearchInput = ({
+  initialQuery,
+  offers,
+}: {
+  initialQuery?: string;
+  offers: Offer[];
+}) => {
   const [query, setQuery] = useState(initialQuery || "");
 
   const handleSearch = () => {
@@ -24,7 +31,7 @@ export const SearchInput = ({ initialQuery }: { initialQuery?: string }) => {
 
       <View className="flex flex-row gap-4">
         <TouchableOpacity>
-          <Filters />
+          <Filters offers={offers} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSearch}>
           <Image
