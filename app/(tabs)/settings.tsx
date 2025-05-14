@@ -34,7 +34,7 @@ export default function Settings() {
           itemLeft={(props) => <Star {...props} />} // props adds size and color attributes
           label="Give us a start"
           // onPress={() => openExternalURL("https://github.com/expo-starter/expo-template")}
-          onPress={() => SheetManager.show("test-sheet")}
+          onPress={() => SheetManager.show("testSheet")}
         />
         <ListItem
           itemLeft={(props) => <Send {...props} />} // props adds size and color attributes
