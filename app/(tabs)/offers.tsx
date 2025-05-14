@@ -13,7 +13,7 @@ import useApi, { getOffers, Offer } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
-import { useState } from "react";
+import { useLocalSearchParams } from "expo-router";
 
 const OfferCard = ({ item }: { item: Offer }) => (
   <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
@@ -67,7 +67,8 @@ const OfferCard = ({ item }: { item: Offer }) => (
 
 const Offers = () => {
   const { data: offers, loading, refetch } = useApi(getOffers);
-  const [filter, setFilter] = useState("");
+  const { searchQuery } = useLocalSearchParams();
+  const filter = typeof searchQuery === "string" ? searchQuery : "";
 
   const filteredOffers = offers?.filter((offer) =>
     Object.values(offer).some((value) =>
@@ -89,7 +90,7 @@ const Offers = () => {
       <FlashList<Offer>
         data={filteredOffers}
         renderItem={({ item }) => <OfferCard item={item} />}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => `${item.id}${item.meta?.link}`}
         className="native:overflow-hidden rounded-t-lg"
         estimatedItemSize={144}
         refreshing={loading}
@@ -118,7 +119,7 @@ const Offers = () => {
             </View>
 
             <View className="pb-4 px-1">
-              <SearchInput filter={filter} setFilter={setFilter} />
+              <SearchInput initialQuery={filter} />
             </View>
           </View>
         )}

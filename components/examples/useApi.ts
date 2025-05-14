@@ -80,7 +80,7 @@ export async function getOffers(): Promise<Offer[]> {
       position: item.Position,
       city: item.Location.split(",")[0],
       state: item.Location.split(",")[1],
-      features_list: ["Interview", "Flexible start"],
+      features_list: ["Interview", "Flexible start"], //B2
       hourly_rate: item.Wage,
       tips_available: true,
       unavailable: false,
