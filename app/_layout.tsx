@@ -110,12 +110,12 @@ export default function RootLayout() {
 
   return (
     <>
-      <SheetProvider>
-        <DatabaseProvider>
-          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <BottomSheetModalProvider>
+      <DatabaseProvider>
+        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheetModalProvider>
+              <SheetProvider>
                 <Stack>
                   <Stack.Screen
                     name="(tabs)"
@@ -134,12 +134,12 @@ export default function RootLayout() {
                     name="habits/[id]"
                   />
                 </Stack>
-              </BottomSheetModalProvider>
-            </GestureHandlerRootView>
-          </ThemeProvider>
-        </DatabaseProvider>
-        <PortalHost />
-      </SheetProvider>
+              </SheetProvider>
+            </BottomSheetModalProvider>
+          </GestureHandlerRootView>
+        </ThemeProvider>
+      </DatabaseProvider>
+      <PortalHost />
     </>
   );
 }
