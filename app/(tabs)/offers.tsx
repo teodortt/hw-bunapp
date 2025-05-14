@@ -21,16 +21,15 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "../../components/examples/components";
 import { images } from "../../components/examples/constants";
-import useApi, { getOffers } from "../../components/examples/useApi";
+import useApi, { getOffers, Offer } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
 
-const OfferCard = ({ item }: any) => (
+const OfferCard = ({ item }: { item: Offer }) => (
   <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
     <Image
       source={{
-        // uri: `https://www.happyworld.bg${item.image.meta.download_url}`,
-        uri: `https://picsum.photos/300`,
+        uri: item.meta?.image,
       }}
       className="w-36 h-36"
     />
@@ -52,7 +51,7 @@ const OfferCard = ({ item }: any) => (
           className="flex-1"
         >
           <View className="flex-row items-center gap-2">
-            {item.featuresList?.map(
+            {item.features_list?.map(
               (
                 feature:
                   | string
@@ -78,8 +77,8 @@ const OfferCard = ({ item }: any) => (
       </View>
       <View className="flex-row justify-between items-center mt-4">
         <Text className="text-lg font-bold text-white">
-          ${item.hourly_rate}
-          {item.tips_available && " + tips"}
+          {item.hourly_rate}
+          {item.tips_available}
         </Text>
         <Text className="text-xs text-red-500">
           {item.unavailable && "Sold out"}
@@ -112,9 +111,9 @@ const Offers = () => {
   return (
     <SafeAreaView className="bg-primary h-full" edges={{ top: "additive" }}>
       <FlatList
-        data={(offers as any)?.items}
+        data={offers}
         // style={{ top: insets.top - 30 }}
-        keyExtractor={(item) => `${(item as any).meta.type}.${item.id}`}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <OfferCard item={item} />}
         ListHeaderComponent={() => (
           <View>
