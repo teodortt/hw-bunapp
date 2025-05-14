@@ -1,17 +1,5 @@
 import {
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useState,
-} from "react";
-
-import {
-  ActivityIndicator,
-  FlatList,
   Image,
-  RefreshControl,
   Text,
   TouchableOpacity,
   View,
@@ -24,6 +12,7 @@ import { images } from "../../components/examples/constants";
 import useApi, { getOffers, Offer } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
+import { FlashList } from "@shopify/flash-list";
 
 const OfferCard = ({ item }: { item: Offer }) => (
   <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
@@ -51,27 +40,14 @@ const OfferCard = ({ item }: { item: Offer }) => (
           className="flex-1"
         >
           <View className="flex-row items-center gap-2">
-            {item.features_list?.map(
-              (
-                feature:
-                  | string
-                  | number
-                  | boolean
-                  | ReactElement<any, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | ReactPortal
-                  | null
-                  | undefined,
-                index: Key | null | undefined
-              ) => (
-                <Text
-                  key={index}
-                  className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
-                >
-                  {feature}
-                </Text>
-              )
-            )}
+            {item.features_list?.map((feature, index) => (
+              <Text
+                key={`${feature}-${index}`}
+                className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
+              >
+                {feature}
+              </Text>
+            ))}
           </View>
         </ScrollView>
       </View>
@@ -90,31 +66,16 @@ const OfferCard = ({ item }: { item: Offer }) => (
 
 const Offers = () => {
   const { data: offers, loading, refetch } = useApi(getOffers);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
-
-  // Show loading spinner while fetching offers
-  if (loading) {
-    return (
-      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
-        <ActivityIndicator size="large" color="#fff" />
-        <Text className="text-white mt-4">Loading offers...</Text>
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView className="bg-primary h-full" edges={{ top: "additive" }}>
-      <FlatList
+      <FlashList<Offer>
         data={offers}
-        // style={{ top: insets.top - 30 }}
-        keyExtractor={(item) => item.id}
         renderItem={({ item }) => <OfferCard item={item} />}
+        className="native:overflow-hidden rounded-t-lg"
+        estimatedItemSize={144}
+        refreshing={loading}
+        onRefresh={refetch}
         ListHeaderComponent={() => (
           <View>
             <View className="flex flex-row justify-between items-center p-4">
@@ -155,15 +116,6 @@ const Offers = () => {
             subtitle="Няма намерени оферти"
           />
         )}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            title="Refreshing..."
-            tintColor="#fff"
-            titleColor="#fff"
-          />
-        }
       />
     </SafeAreaView>
   );
