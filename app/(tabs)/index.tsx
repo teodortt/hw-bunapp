@@ -38,7 +38,7 @@ export default function Home() {
 function ScreenContent() {
   const { db } = useDatabase();
   const { data: habits, error } = useLiveQuery(
-    db?.select().from(habitTable).where(eq(habitTable.archived, false))
+    (db as any)?.select().from(habitTable).where(eq(habitTable.archived, false))
   );
 
   const ref = React.useRef(null);

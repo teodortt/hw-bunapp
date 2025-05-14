@@ -1,17 +1,17 @@
-import {View, Alert} from "react-native";
-import {useScrollToTop} from "@react-navigation/native";
-import {FlashList} from "@shopify/flash-list";
-import {eq} from "drizzle-orm";
-import {Stack} from "expo-router";
+import { View, Alert } from "react-native";
+import { useScrollToTop } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import { eq } from "drizzle-orm";
+import { Stack } from "expo-router";
 import * as React from "react";
-import {useLiveQuery} from "drizzle-orm/expo-sqlite";
+import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 
-import {Text} from "@/components/ui/text";
-import {habitTable} from "@/db/schema";
-import {useDatabase} from "@/db/provider";
-import {HabitCard} from "@/components/habit";
-import type {Habit} from "@/lib/storage";
-import {Archive} from "@/lib/icons";
+import { Text } from "@/components/ui/text";
+import { habitTable } from "@/db/schema";
+import { useDatabase } from "@/db/provider";
+import { HabitCard } from "@/components/habit";
+import type { Habit } from "@/lib/storage";
+import { Archive } from "@/lib/icons";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,12 +22,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import {Button} from "@/components/ui";
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui";
 export default function Home() {
-  const {db} = useDatabase();
-  const {data: habits, error} = useLiveQuery(
-    db?.select().from(habitTable).where(eq(habitTable.archived, true)),
+  const { db } = useDatabase();
+  const { data: habits, error } = useLiveQuery(
+    (db as any)?.select().from(habitTable).where(eq(habitTable.archived, true))
   );
 
   const ref = React.useRef(null);
@@ -48,28 +48,37 @@ export default function Home() {
   }
 
   async function handleDeleteHabit(habitId: string) {
-    Alert.alert('Are you absolutely sure?', 'Are you sure you want to delete this Habit ?', [
-      {
-        text: 'Cancel',
-      },
-      {
-        text: 'Continue',
-        onPress: () => {
-          // try {
-          //   await db?.delete(habitTable).where(eq(habitTable.id, habitId)).execute();
-          // } catch (error) {
-          //   console.error("error", error);
-          // }
+    Alert.alert(
+      "Are you absolutely sure?",
+      "Are you sure you want to delete this Habit ?",
+      [
+        {
+          text: "Cancel",
         },
-        style: 'destructive',
-      },
-    ]);
+        {
+          text: "Continue",
+          onPress: () => {
+            // try {
+            //   await db?.delete(habitTable).where(eq(habitTable.id, habitId)).execute();
+            // } catch (error) {
+            //   console.error("error", error);
+            // }
+          },
+          style: "destructive",
+        },
+      ]
+    );
     // Are you sure you want to delete this Habit ?
-
   }
   const renderItem = React.useCallback(
-    ({item}: {item: Habit}) => <HabitCard onDelete={handleDeleteHabit} onRestore={handleRestoreHabit} {...item} />,
-    [],
+    ({ item }: { item: Habit }) => (
+      <HabitCard
+        onDelete={handleDeleteHabit}
+        onRestore={handleRestoreHabit}
+        {...item}
+      />
+    ),
+    []
   );
 
   if (error) {
@@ -103,7 +112,7 @@ export default function Home() {
         ItemSeparatorComponent={() => <View className="p-2" />}
         data={habits}
         renderItem={renderItem}
-        keyExtractor={(_, index) => `item-${ index }`}
+        keyExtractor={(_, index) => `item-${index}`}
         ListFooterComponent={<View className="py-4" />}
       />
       <AlertDialog>
@@ -118,7 +127,10 @@ export default function Home() {
             <AlertDialogCancel>
               <Text>Cancel</Text>
             </AlertDialogCancel>
-            <AlertDialogAction className="bg-foreground" onPress={() => console.log("pressed")}>
+            <AlertDialogAction
+              className="bg-foreground"
+              onPress={() => console.log("pressed")}
+            >
               <Text>Archive</Text>
             </AlertDialogAction>
           </AlertDialogFooter>
