@@ -3,8 +3,8 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Alert,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "../../components/examples/components";
@@ -13,6 +13,7 @@ import useApi, { getOffers, Offer } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
+import { useState } from "react";
 
 const OfferCard = ({ item }: { item: Offer }) => (
   <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
@@ -66,12 +67,29 @@ const OfferCard = ({ item }: { item: Offer }) => (
 
 const Offers = () => {
   const { data: offers, loading, refetch } = useApi(getOffers);
+  const [filter, setFilter] = useState("");
+
+  const filteredOffers = offers?.filter((offer) =>
+    Object.values(offer).some((value) =>
+      String(value).toLowerCase().includes(filter.toLowerCase())
+    )
+  );
+
+  if (!offers && loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
+        <ActivityIndicator size="large" color="#fff" />
+        <Text className="text-white mt-4">Loading offers...</Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="bg-primary h-full" edges={{ top: "additive" }}>
       <FlashList<Offer>
-        data={offers}
+        data={filteredOffers}
         renderItem={({ item }) => <OfferCard item={item} />}
+        keyExtractor={(item) => item.id}
         className="native:overflow-hidden rounded-t-lg"
         estimatedItemSize={144}
         refreshing={loading}
@@ -80,13 +98,7 @@ const Offers = () => {
           <View>
             <View className="flex flex-row justify-between items-center p-4">
               <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    // TODO: reload the data
-                    Alert.alert("No values stored under that key.");
-                    console.log("No values are stored under that key.");
-                  }}
-                >
+                <TouchableOpacity onPress={() => refetch()}>
                   <Text className="font-medium text-sm text-gray-100">
                     Work and Travel
                   </Text>
@@ -106,7 +118,7 @@ const Offers = () => {
             </View>
 
             <View className="pb-4 px-1">
-              <SearchInput initialQuery={"undefined"} />
+              <SearchInput filter={filter} setFilter={setFilter} />
             </View>
           </View>
         )}

@@ -1,38 +1,25 @@
-import { useState } from "react";
-import { router, usePathname } from "expo-router";
-import { View, TouchableOpacity, Image, TextInput, Alert } from "react-native";
+import { View, TouchableOpacity, Image, TextInput } from "react-native";
 import { icons } from "@/components/examples/constants";
 
-export const SearchInput = ({ initialQuery }: { initialQuery: string }) => {
-  const pathname = usePathname();
-  const [query, setQuery] = useState(initialQuery || "");
-
+export const SearchInput = ({
+  filter,
+  setFilter,
+}: {
+  filter: string;
+  setFilter: (value: string) => void;
+}) => {
   return (
     <View className="flex flex-row items-center space-x-4 w-full h-12 px-4 bg-black-200 rounded-2xl border-2 border-neutral-800 focus:border-secondary">
       <TextInput
         className="text-base text-white flex-1 font-pregular"
-        value={query}
+        value={filter}
         placeholder="Търсене"
         placeholderTextColor="#CDCDE0"
-        onChangeText={(e) => setQuery(e)}
+        onChangeText={(e) => setFilter(e)}
+        autoFocus
       />
 
-      <TouchableOpacity
-        onPress={() => {
-          if (query === "")
-            return Alert.alert(
-              "Missing Query",
-              "Please input something to search results across database"
-            );
-
-          if (pathname.startsWith("/search")) router.setParams({ query });
-          else
-            router.push({
-              pathname: "/habits/[id]",
-              params: { id: query },
-            });
-        }}
-      >
+      <TouchableOpacity>
         <Image source={icons.search} className="w-5 h-5" resizeMode="contain" />
       </TouchableOpacity>
     </View>
