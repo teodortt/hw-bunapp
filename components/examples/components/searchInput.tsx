@@ -1,5 +1,6 @@
 import { View, TouchableOpacity, Image, TextInput } from "react-native";
 import { icons } from "@/components/examples/constants";
+import { Filters } from "@/components/settings/Filters";
 
 export const SearchInput = ({
   filter,
@@ -17,11 +18,21 @@ export const SearchInput = ({
         placeholderTextColor="#CDCDE0"
         onChangeText={(e) => setFilter(e)}
         autoFocus
+        //TODO: or onBlur
       />
 
-      <TouchableOpacity>
-        <Image source={icons.search} className="w-5 h-5" resizeMode="contain" />
-      </TouchableOpacity>
+      <View className="flex flex-row gap-4">
+        <TouchableOpacity>
+          <Filters />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Image
+            source={icons.search}
+            className="w-5 h-5"
+            resizeMode="contain"
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
