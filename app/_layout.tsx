@@ -12,6 +12,8 @@ import { NAV_THEME } from "@/lib/constants";
 import { useColorScheme } from "@/lib/useColorScheme";
 import { getItem, setItem } from "@/lib/storage";
 import { Platform } from "react-native";
+import { SheetProvider } from "react-native-actions-sheet";
+import "../components/sheets/sheets";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
@@ -108,31 +110,36 @@ export default function RootLayout() {
 
   return (
     <>
-      <DatabaseProvider>
-        <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-          <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheetModalProvider>
-              <Stack>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  options={{
-                    headerShadowVisible: false,
-                  }}
-                  name="habits/archive"
-                />
-                <Stack.Screen
-                  options={{
-                    headerShadowVisible: false,
-                  }}
-                  name="habits/[id]"
-                />
-              </Stack>
-            </BottomSheetModalProvider>
-          </GestureHandlerRootView>
-        </ThemeProvider>
-      </DatabaseProvider>
-      <PortalHost />
+      <SheetProvider>
+        <DatabaseProvider>
+          <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+            <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BottomSheetModalProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    options={{
+                      headerShadowVisible: false,
+                    }}
+                    name="habits/archive"
+                  />
+                  <Stack.Screen
+                    options={{
+                      headerShadowVisible: false,
+                    }}
+                    name="habits/[id]"
+                  />
+                </Stack>
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
+          </ThemeProvider>
+        </DatabaseProvider>
+        <PortalHost />
+      </SheetProvider>
     </>
   );
 }
