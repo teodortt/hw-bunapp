@@ -68,19 +68,32 @@ const OfferCard = ({ item }: { item: Offer }) => (
 
 const Offers = () => {
   const { data: offers, loading, refetch } = useApi(getOffers);
-  const { searchQuery } = useLocalSearchParams();
+  const { searchQuery, position, state } = useLocalSearchParams();
   const filter = typeof searchQuery === "string" ? searchQuery : "";
 
   const filteredOffers = offers?.filter((offer) =>
-    Object.values(offer).some((value) =>
-      String(value).toLowerCase().includes(filter.toLowerCase())
-    )
-  );
+    Object.values(offer).some((value) => {
+      const isSearchMatch = filter
+        ? String(value).toLowerCase().includes(filter.toLowerCase())
+        : true;
 
-  // const offerPosition = offers?.map((offer) => offer.position);
-  // const offerState = offers?.map((offer) => offer.state);
-  // const offerTipsAvailable = offers?.map((offer) => offer.tips_available);
-  // const offerUnavailable = offers?.map((offer) => offer.unavailable);
+      const isPositionMatch =
+        Array.isArray(position) && position.length
+          ? position.some(
+              (p) => p.toLowerCase() === offer.position.trim().toLowerCase()
+            )
+          : true;
+
+      const isStateMatch =
+        Array.isArray(state) && state.length
+          ? state.some(
+              (s) => s.toLowerCase() === offer.state.trim().toLowerCase()
+            )
+          : true;
+
+      return isSearchMatch && isPositionMatch && isStateMatch;
+    })
+  );
 
   if (!offers && loading) {
     return (

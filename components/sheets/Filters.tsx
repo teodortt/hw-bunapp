@@ -11,11 +11,7 @@ import {
 } from "../ui/select";
 import { Option } from "../primitives/select";
 import { Offer } from "../examples/useApi";
-import {
-  router,
-  useLocalSearchParams,
-  useGlobalSearchParams,
-} from "expo-router";
+import { router, useGlobalSearchParams } from "expo-router";
 import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
 import { getFullStateName } from "@/lib/getStatename";
 import ActionSheet, {
@@ -23,7 +19,6 @@ import ActionSheet, {
   useSheetRef,
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../ui";
 
 export const Filters = () => {
   const offers: Offer[] = useSheetPayload("payload");
@@ -33,7 +28,8 @@ export const Filters = () => {
   const offersRows = splitIntoRows(offers.map((offer) => offer.position));
   const statesRows = splitIntoRows(offers.map((offer) => offer.state));
 
-  const handleChangeParams = (key: string, item: string) => {
+  const handleChangeParams = (key: string, param: string) => {
+    const item = param.trim().toLowerCase();
     const currentParam = params[key];
     const currentValues: string[] = Array.isArray(currentParam)
       ? currentParam
@@ -53,9 +49,7 @@ export const Filters = () => {
 
     // Set params only if there are values, else remove the param
     router.setParams({
-      ...(updatedValues.length > 0
-        ? { [key]: updatedValues }
-        : { [key]: undefined }),
+      ...(updatedValues.length > 0 ? { [key]: updatedValues } : { [key]: "" }),
     });
   };
 
@@ -90,7 +84,7 @@ export const Filters = () => {
               <Text>Работна позиция</Text>
               {!allKeysEmpty(params["position"]) && (
                 <TouchableOpacity
-                  onPress={() => router.setParams({ position: undefined })}
+                  onPress={() => router.setParams({ position: "" })}
                   className={"rounded-md bg-primary"}
                 >
                   <Text>Изчисти</Text>
@@ -114,7 +108,9 @@ export const Filters = () => {
                         onPress={() => handleChangeParams("position", item)}
                         className={cn(
                           " bg-white/20 p-2 rounded-md mr-2",
-                          params["position"]?.includes(item) && "bg-white/50"
+                          params["position"]?.includes(
+                            item.trim().toLocaleLowerCase()
+                          ) && "bg-white/50"
                         )}
                       >
                         <Text className="text-s text-white capitalize w-full h-fit">
@@ -132,7 +128,7 @@ export const Filters = () => {
               <Text>Щат</Text>
               {!allKeysEmpty(params["state"]) && (
                 <TouchableOpacity
-                  onPress={() => router.setParams({ state: undefined })}
+                  onPress={() => router.setParams({ state: "" })}
                   className={"rounded-md bg-primary"}
                 >
                   <Text>Изчисти</Text>
@@ -161,7 +157,9 @@ export const Filters = () => {
                         }}
                         className={cn(
                           " bg-white/20 p-2 rounded-md mr-2 ",
-                          params["state"]?.includes(item) && "bg-white/50"
+                          params["state"]?.includes(
+                            item.trim().toLocaleLowerCase()
+                          ) && "bg-white/50"
                         )}
                       >
                         <Text className="text-s text-white text-center uppercase w-full h-fit">
@@ -177,90 +175,6 @@ export const Filters = () => {
         </View>
       </View>
     </ActionSheet>
-
-    //   <BottomSheetContent backgroundStyle={{ backgroundColor: "#161622" }}>
-    //     <BottomSheetHeader className="bg-primary">
-    //       <Text className="text-foreground text-xl font-bold  pb-1">
-    //         Филтри
-    //       </Text>
-    //     </BottomSheetHeader>
-    //     <BottomSheetView className="gap-5 pt-6 bg-primary h-[450px]">
-    //       <View className="flex gap-2 items-start justify-start px-2">
-    //         <View className="w-full border-b-2 border-b-slate-800 pb-2">
-    //           <Text>Работна позиция</Text>
-    //         </View>
-    //         <ScrollView
-    //           horizontal
-    //           showsHorizontalScrollIndicator
-    //           indicatorStyle="white"
-    //           contentContainerStyle={{
-    //             paddingRight: 100,
-    //           }}
-    //         >
-    //           <View className="flex-col">
-    //             {offersRows.map((rowData, rowIndex) => (
-    //               <View key={rowIndex} className="flex-row my-1">
-    //                 {rowData.map((item, index) => (
-    //                   <TouchableOpacity
-    //                     key={index}
-    //                     onPress={() => handleChangeParams("position", item)}
-    //                     className={cn(
-    //                       " bg-white/20 p-2 rounded-md mr-2",
-    //                       params["position"]?.includes(item) && "bg-white/50"
-    //                     )}
-    //                   >
-    //                     <Text className="text-s text-white capitalize w-full h-fit">
-    //                       {item}
-    //                     </Text>
-    //                   </TouchableOpacity>
-    //                 ))}
-    //               </View>
-    //             ))}
-    //           </View>
-    //         </ScrollView>
-    //       </View>
-    //       <View className="flex gap-2 items-start justify-start">
-    //         <View className="w-full border-b-2 border-b-slate-800 pb-2">
-    //           <Text>Щат</Text>
-    //         </View>
-
-    //         <ScrollView
-    //           horizontal
-    //           showsHorizontalScrollIndicator
-    //           indicatorStyle="white"
-    //           contentContainerStyle={{
-    //             paddingRight: 100,
-    //           }}
-    //         >
-    //           <View className="flex-col">
-    //             {statesRows.map((rowData, rowIndex) => (
-    //               <View key={rowIndex} className="flex-row my-1">
-    //                 {rowData.map((item, index) => (
-    //                   <TouchableOpacity
-    //                     key={index}
-    //                     onPress={(e) => {
-    //                       e.stopPropagation();
-    //                       e.preventDefault();
-    //                       handleChangeParams("position", item);
-    //                     }}
-    //                     className={cn(
-    //                       " bg-white/20 p-2 rounded-md mr-2 ",
-    //                       params["position"]?.includes(item) && "bg-white/50"
-    //                     )}
-    //                   >
-    //                     <Text className="text-s text-white text-center uppercase w-full h-fit">
-    //                       {getFullStateName(item)}
-    //                     </Text>
-    //                   </TouchableOpacity>
-    //                 ))}
-    //               </View>
-    //             ))}
-    //           </View>
-    //         </ScrollView>
-    //       </View>
-    //     </BottomSheetView>
-    //   </BottomSheetContent>
-    // </BottomSheet> */}
   );
 };
 
@@ -271,7 +185,7 @@ const SelectFilter = ({
   placeholder: string;
   options: Option[];
 }) => {
-  const query = useLocalSearchParams()[placeholder];
+  const query = useGlobalSearchParams()[placeholder];
 
   const queryValue = typeof query === "string" ? query : "";
 
