@@ -1,0 +1,96 @@
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import * as React from "react";
+import {
+  ScrollView,
+  Image,
+  ActivityIndicator,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { Text } from "@/components/ui/text";
+import useApi, { getOfferDetails } from "@/components/examples/useApi";
+import { SafeAreaView } from "react-native-safe-area-context";
+
+export default function OfferDetailsScreen() {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const navigation = useNavigation();
+  const router = useRouter();
+  const { data: offer, loading } = useApi(() => getOfferDetails(id));
+
+  console.log("offer", offer);
+
+  if (!offer && !loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
+        <Text className="text-destructive pb-2 ">Error Loading data</Text>
+      </SafeAreaView>
+    );
+  }
+  if (loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
+        <ActivityIndicator size="large" color="#fff" />
+        <Text className="text-white mt-4">Loading offer data...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!offer) {
+    return null;
+  }
+
+  return (
+    <ScrollView
+      contentContainerStyle={{ padding: 24 }}
+      className="mx-auto w-full max-w-xl"
+      showsVerticalScrollIndicator={false}
+      automaticallyAdjustContentInsets={false}
+      contentInset={{ top: 12 }}
+    >
+      <Text className="text-2xl font-bold mb-4">Job Offer</Text>
+
+      {/* Image */}
+      {offer?.meta?.image && (
+        <Image
+          source={{ uri: offer.meta.image }}
+          className="w-full h-48 rounded-2xl mb-4"
+          resizeMode="cover"
+        />
+      )}
+
+      {/* Position */}
+      <Text className="text-xl font-semibold">{offer.position}</Text>
+      <Text className="text-gray-500 mb-2">
+        {offer.city}, {offer.state}
+      </Text>
+
+      {/* Wage */}
+      <Text className="text-lg font-medium mb-1">${offer.hourly_rate}/hr</Text>
+
+      {/* Features */}
+      <View className="flex-row flex-wrap gap-2 mb-3">
+        {offer.features_list.map((feature, index) => (
+          <Text
+            key={index}
+            className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+          >
+            {feature}
+          </Text>
+        ))}
+        {offer.tips_available && (
+          <Text className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+            Tips available
+          </Text>
+        )}
+      </View>
+
+      {/* Link */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        className="bg-primary px-4 py-3 rounded-xl mt-2"
+      >
+        <Text className="text-white text-center font-medium">Back</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}

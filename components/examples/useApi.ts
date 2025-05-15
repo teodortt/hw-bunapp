@@ -237,3 +237,40 @@ export async function getOffers(): Promise<Offer[]> {
   //   ],
   // };
 }
+
+export async function getOfferDetails(id: string): Promise<Offer> {
+  try {
+    const response = await fetch(
+      `https://sheets.livepolls.app/api/spreadsheets/ffc50341-04e8-438e-b58b-06367383f4f6/Offers/${id}`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const offer = {
+      id: String(id),
+      position: data.data.Position,
+      city: data.data?.Location?.split(",")?.[0],
+      state: data.data?.Location?.split(",")?.[1],
+      features_list: ["Interview", "Flexible start"], //B2
+      hourly_rate: data.data.Wage,
+      tips_available: true,
+      unavailable: false,
+      meta: {
+        link: data.data.OfferLink,
+        image: data.data.Image,
+      },
+    };
+
+    return offer;
+  } catch (error) {
+    console.error("Error fetching offers:", error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+}

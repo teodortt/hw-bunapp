@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "../../components/examples/components";
@@ -14,56 +15,62 @@ import useApi, { getOffers, Offer } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 
 const OfferCard = ({ item }: { item: Offer }) => (
-  <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
-    <Image
-      source={{
-        uri: item.meta?.image,
-      }}
-      className="w-36 h-36"
-    />
-    <View className="flex-1 p-2 pl-4">
-      <View className="flex-row justify-between items-center">
-        <Text className="text-lg font-bold text-white">{item.position}</Text>
-      </View>
-      <View className="flex-row items-center gap-2">
-        <Home className="text-foreground w-4 h-4" />
-        <Text className="text-sm text-gray-300">
-          {item.city}, {item.state}
-        </Text>
-      </View>
-
-      <View className="flex-row pt-2 gap-2 items-center">
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="flex-1"
-        >
-          <View className="flex-row items-center gap-2">
-            {item.features_list?.map((feature, index) => (
-              <Text
-                key={`${feature}-${index}`}
-                className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
-              >
-                {feature}
-              </Text>
-            ))}
+  <Link href={`/offers/${item.id}`} asChild>
+    <Pressable>
+      <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
+        <Image
+          source={{
+            uri: item.meta?.image,
+          }}
+          className="w-36 h-36"
+        />
+        <View className="flex-1 p-2 pl-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-lg font-bold text-white">
+              {item.position}
+            </Text>
           </View>
-        </ScrollView>
+          <View className="flex-row items-center gap-2">
+            <Home className="text-foreground w-4 h-4" />
+            <Text className="text-sm text-gray-300">
+              {item.city}, {item.state}
+            </Text>
+          </View>
+
+          <View className="flex-row pt-2 gap-2 items-center">
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="flex-1"
+            >
+              <View className="flex-row items-center gap-2">
+                {item.features_list?.map((feature, index) => (
+                  <Text
+                    key={`${feature}-${index}`}
+                    className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
+                  >
+                    {feature}
+                  </Text>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+          <View className="flex-row justify-between items-center mt-4">
+            <Text className="text-lg font-bold text-white">
+              {item.hourly_rate}
+              {item.tips_available}
+            </Text>
+            <Text className="text-xs text-red-500">
+              {item.unavailable && "Sold out"}
+            </Text>
+          </View>
+        </View>
       </View>
-      <View className="flex-row justify-between items-center mt-4">
-        <Text className="text-lg font-bold text-white">
-          {item.hourly_rate}
-          {item.tips_available}
-        </Text>
-        <Text className="text-xs text-red-500">
-          {item.unavailable && "Sold out"}
-        </Text>
-      </View>
-    </View>
-  </View>
+    </Pressable>
+  </Link>
 );
 
 const Offers = () => {
