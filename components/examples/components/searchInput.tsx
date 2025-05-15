@@ -1,12 +1,15 @@
-import { View, TouchableOpacity, Image, TextInput } from "react-native";
-import { Filters } from "@/components/settings/Filters";
+import { View, TouchableOpacity, TextInput } from "react-native";
 import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Offer } from "../useApi";
-import { SearchIcon } from "lucide-react-native";
+import { Filter, SearchIcon } from "lucide-react-native";
+import { SheetManager } from "react-native-actions-sheet";
+import { allKeysEmpty } from "@/lib/utils";
 
 export const SearchInput = ({ offers }: { offers: Offer[] }) => {
-  const { searchQuery } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const searchQuery = params["searchQuery"];
+
   const [query, setQuery] = useState(searchQuery || "");
 
   const handleChange = (text: string) => {
@@ -21,7 +24,7 @@ export const SearchInput = ({ offers }: { offers: Offer[] }) => {
   };
 
   return (
-    <View className="flex flex-row items-center space-x-4 w-full h-12 px-4 bg-black-200 rounded-2xl border-2 border-neutral-800 focus:border-secondary">
+    <View className="flex-row items-center space-x-4 w-full h-12 px-4 bg-black-200 rounded-2xl border-2 border-neutral-800 focus:border-secondary">
       <TextInput
         className="text-base text-white flex-1 font-pregular"
         value={query as string}
@@ -31,8 +34,23 @@ export const SearchInput = ({ offers }: { offers: Offer[] }) => {
         onBlur={handleSearch}
       />
 
-      <View className="flex flex-row gap-4">
-        <Filters offers={offers} />
+      <View className="flex-row gap-4">
+        <TouchableOpacity
+          onPress={() =>
+            SheetManager.show("filters", {
+              payload: offers,
+            })
+          }
+        >
+          <Filter
+            color={
+              allKeysEmpty(params, ["searchQuery", "tempSearchQuery"])
+                ? "#CDCDE0"
+                : "#ff9f36"
+            }
+            size={17}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleSearch}>
           <SearchIcon color="#CDCDE0" size={17} />
         </TouchableOpacity>

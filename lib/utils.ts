@@ -41,44 +41,35 @@ export const splitIntoRows = (data: any[], arrays?: number): string[][] => {
   });
   return rows;
 };
-
 export const allKeysEmpty = (
-  obj: Record<string, unknown>,
+  obj: Record<string, unknown> | null | string | string[],
   excludeKeys: string[] = []
 ): boolean => {
+  if (obj == null || typeof obj !== "object") return true;
+
   return Object.entries(obj)
     .filter(([key]) => !excludeKeys.includes(key))
     .every(([, value]) => {
-      // Handle null or undefined
       if (value === null || value === undefined) return true;
 
-      // Handle empty string or string "undefined"
-      if (
-        typeof value === "string" &&
-        (value.trim() === "" || value === "undefined")
-      )
-        return true;
+      if (typeof value === "string") {
+        return value.trim() === "" || value === "undefined";
+      }
 
-      // Handle arrays
       if (Array.isArray(value)) {
-        return (
-          value.length === 0 ||
-          value.every(
-            (item) =>
-              item === "undefined" ||
-              (typeof item === "string" && item.trim() === "") ||
-              item === null ||
-              item === undefined
-          )
+        return value.every(
+          (item) =>
+            item === null ||
+            item === undefined ||
+            (typeof item === "string" &&
+              (item.trim() === "" || item === "undefined"))
         );
       }
 
-      // Handle empty object
-      if (typeof value === "object" && !Array.isArray(value)) {
+      if (typeof value === "object") {
         return allKeysEmpty(value as Record<string, unknown>, excludeKeys);
       }
 
-      // Handle false and other non-empty values
-      return false;
+      return false; // value is a valid primitive (number, boolean, etc.)
     });
 };
