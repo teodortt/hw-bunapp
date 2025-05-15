@@ -1,15 +1,6 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/ui//text";
-import { useMemo } from "react";
 import { XIcon } from "lucide-react-native";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Option } from "../primitives/select";
 import { Offer } from "../examples/useApi";
 import { router, useGlobalSearchParams } from "expo-router";
 import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
@@ -53,8 +44,6 @@ export const Filters = () => {
     });
   };
 
-  console.log(params, "params");
-
   return (
     <ActionSheet
       isModal={false}
@@ -69,7 +58,6 @@ export const Filters = () => {
         backgroundColor: "#161622",
         paddingHorizontal: 12,
       }}
-      // className="justify-center items-center w-full h-[500px] bg-primary"
     >
       <View className="gap-3">
         <View className="flex-row items-center justify-between pb-2">
@@ -175,54 +163,5 @@ export const Filters = () => {
         </View>
       </View>
     </ActionSheet>
-  );
-};
-
-const SelectFilter = ({
-  placeholder,
-  options,
-}: {
-  placeholder: string;
-  options: Option[];
-}) => {
-  const query = useGlobalSearchParams()[placeholder];
-
-  const queryValue = typeof query === "string" ? query : "";
-
-  const value = useMemo(() => {
-    const selectedOption = options.find(
-      (option) => option?.value === queryValue
-    );
-    return selectedOption;
-  }, [queryValue, options]);
-
-  const handleSelect = (option: Option) => {
-    if (!option) return;
-    router.setParams({ placeholder: option.value });
-  };
-
-  return (
-    <Select className="flex-row" value={value} onValueChange={handleSelect}>
-      <SelectTrigger className="w-[150px]">
-        <SelectValue
-          className="text-foreground text-sm native:text-lg"
-          placeholder={placeholder}
-        />
-      </SelectTrigger>
-      <SelectContent className="w-[150px]">
-        {options.map(
-          (option, i) =>
-            option && (
-              <SelectItem
-                key={`${option.value}-${i}`}
-                value={option.value}
-                label={option.label}
-              >
-                {option.label}
-              </SelectItem>
-            )
-        )}
-      </SelectContent>
-    </Select>
   );
 };
