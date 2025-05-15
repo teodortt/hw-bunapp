@@ -1,9 +1,9 @@
 import { View, TouchableOpacity, Image, TextInput } from "react-native";
-import { icons } from "@/components/examples/constants";
 import { Filters } from "@/components/settings/Filters";
 import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Offer } from "../useApi";
+import { SearchIcon } from "lucide-react-native";
 
 export const SearchInput = ({ offers }: { offers: Offer[] }) => {
   const { searchQuery } = useLocalSearchParams();
@@ -32,15 +32,9 @@ export const SearchInput = ({ offers }: { offers: Offer[] }) => {
       />
 
       <View className="flex flex-row gap-4">
-        <TouchableOpacity>
-          <Filters offers={offers} />
-        </TouchableOpacity>
+        <Filters offers={offers} />
         <TouchableOpacity onPress={handleSearch}>
-          <Image
-            source={icons.search}
-            className="w-5 h-5"
-            resizeMode="contain"
-          />
+          <SearchIcon color="#CDCDE0" size={17} />
         </TouchableOpacity>
       </View>
     </View>

@@ -83,14 +83,16 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
   return (
     <BottomSheet>
       <BottomSheetOpenTrigger asChild>
-        <Filter
-          color={
-            allKeysEmpty(params, ["searchQuery", "tempSearchQuery"])
-              ? "#CDCDE0"
-              : "#ff9f36"
-          }
-          size={17}
-        />
+        <TouchableOpacity>
+          <Filter
+            color={
+              allKeysEmpty(params, ["searchQuery", "tempSearchQuery"])
+                ? "#CDCDE0"
+                : "#ff9f36"
+            }
+            size={17}
+          />
+        </TouchableOpacity>
       </BottomSheetOpenTrigger>
       <BottomSheetContent backgroundStyle={{ backgroundColor: "#161622" }}>
         <BottomSheetHeader className="bg-primary">
