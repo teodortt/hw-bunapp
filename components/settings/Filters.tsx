@@ -1,4 +1,4 @@
-import { Platform, View } from "react-native";
+import { Platform, ScrollView, TouchableOpacity, View } from "react-native";
 import {
   BottomSheet,
   BottomSheetContent,
@@ -21,6 +21,8 @@ import {
 import { Option } from "../primitives/select";
 import { Offer } from "../examples/useApi";
 import { router, useLocalSearchParams } from "expo-router";
+import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
+import { getFullStateName } from "@/lib/getStatename";
 type ItemData = {
   title: string;
   subtitle: string;
@@ -47,39 +49,129 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
     []
   );
 
+  const params = useLocalSearchParams();
+
+  const offersRows = splitIntoRows(offers.map((offer) => offer.position));
+  const statesRows = splitIntoRows(offers.map((offer) => offer.state));
+
+  const handleChangeParams = (key: string, item: string) => {
+    const currentParam = params[key];
+    const currentValues: string[] = Array.isArray(currentParam)
+      ? currentParam
+      : currentParam
+      ? [currentParam]
+      : [];
+
+    let updatedValues: string[];
+
+    if (currentValues.includes(item)) {
+      // Remove the item
+      updatedValues = currentValues.filter((value) => value !== item);
+    } else {
+      // Add the item
+      updatedValues = [...currentValues, item];
+    }
+
+    // Set params only if there are values, else remove the param
+    router.setParams({
+      ...(updatedValues.length > 0
+        ? { [key]: updatedValues }
+        : { [key]: undefined }),
+    });
+  };
+
   return (
     <BottomSheet>
       <BottomSheetOpenTrigger asChild>
-        <Filter color={"#CDCDE0"} size={17} />
+        <Filter
+          color={
+            allKeysEmpty(params, ["searchQuery", "tempSearchQuery"])
+              ? "#CDCDE0"
+              : "#ff9f36"
+          }
+          size={17}
+        />
       </BottomSheetOpenTrigger>
       <BottomSheetContent backgroundStyle={{ backgroundColor: "#161622" }}>
         <BottomSheetHeader className="bg-primary">
           <Text className="text-foreground text-xl font-bold  pb-1">
-            Сортиране
+            Филтри
           </Text>
         </BottomSheetHeader>
-        <BottomSheetView className="gap-5 pt-6 bg-primary">
-          {themes.map((theme) => (
-            <View
-              key={theme.title}
-              className="flex-row gap-2 justify-between px-4"
-            >
-              <SelectFilter
-                placeholder="Локация"
-                options={offers.map((offer) => ({
-                  label: offer.state,
-                  value: offer.state,
-                }))}
-              />
-              <SelectFilter
-                placeholder="Работна позиция"
-                options={offers.map((offer) => ({
-                  label: offer.position,
-                  value: offer.position,
-                }))}
-              />
+        <BottomSheetView className="gap-5 pt-6 bg-primary h-[450px]">
+          <View className="flex gap-2 items-start justify-start px-2">
+            <View className="w-full border-b-2 border-b-slate-800 pb-2">
+              <Text>Работна позиция</Text>
             </View>
-          ))}
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator
+              indicatorStyle="white"
+              contentContainerStyle={{
+                paddingRight: 100,
+              }}
+            >
+              <View className="flex-col">
+                {offersRows.map((rowData, rowIndex) => (
+                  <View key={rowIndex} className="flex-row my-1">
+                    {rowData.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={() => handleChangeParams("position", item)}
+                        className={cn(
+                          " bg-white/20 p-2 rounded-md mr-2",
+                          params["position"]?.includes(item) && "bg-white/50"
+                        )}
+                      >
+                        <Text className="text-s text-white capitalize w-full h-fit">
+                          {item}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+          <View className="flex gap-2 items-start justify-start">
+            <View className="w-full border-b-2 border-b-slate-800 pb-2">
+              <Text>Щат</Text>
+            </View>
+
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator
+              indicatorStyle="white"
+              contentContainerStyle={{
+                paddingRight: 100,
+              }}
+            >
+              <View className="flex-col">
+                {statesRows.map((rowData, rowIndex) => (
+                  <View key={rowIndex} className="flex-row my-1">
+                    {rowData.map((item, index) => (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleChangeParams("position", item);
+                        }}
+                        className={cn(
+                          " bg-white/20 p-2 rounded-md mr-2 ",
+                          params["position"]?.includes(item) && "bg-white/50"
+                        )}
+                      >
+                        <Text className="text-s text-white text-center uppercase w-full h-fit">
+                          {getFullStateName(item)}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
         </BottomSheetView>
       </BottomSheetContent>
     </BottomSheet>

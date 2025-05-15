@@ -131,7 +131,7 @@ const Offers = () => {
             </View>
 
             <View className="pb-4 px-1">
-              <SearchInput initialQuery={filter} offers={offers || []} />
+              <SearchInput offers={offers || []} />
             </View>
           </View>
         )}

@@ -30,3 +30,55 @@ export const debounce = <T extends (...args: any[]) => void>(
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 };
+
+export const splitIntoRows = (data: any[], arrays?: number): string[][] => {
+  const uniqueItems = Array.from(
+    new Set(data.map((item) => item.toLowerCase()))
+  );
+  const rows: string[][] = [[], [], []];
+  uniqueItems.forEach((item, index) => {
+    rows[index % (arrays || 3)].push(item);
+  });
+  return rows;
+};
+
+export const allKeysEmpty = (
+  obj: Record<string, unknown>,
+  excludeKeys: string[] = []
+): boolean => {
+  return Object.entries(obj)
+    .filter(([key]) => !excludeKeys.includes(key))
+    .every(([, value]) => {
+      // Handle null or undefined
+      if (value === null || value === undefined) return true;
+
+      // Handle empty string or string "undefined"
+      if (
+        typeof value === "string" &&
+        (value.trim() === "" || value === "undefined")
+      )
+        return true;
+
+      // Handle arrays
+      if (Array.isArray(value)) {
+        return (
+          value.length === 0 ||
+          value.every(
+            (item) =>
+              item === "undefined" ||
+              (typeof item === "string" && item.trim() === "") ||
+              item === null ||
+              item === undefined
+          )
+        );
+      }
+
+      // Handle empty object
+      if (typeof value === "object" && !Array.isArray(value)) {
+        return allKeysEmpty(value as Record<string, unknown>, excludeKeys);
+      }
+
+      // Handle false and other non-empty values
+      return false;
+    });
+};
