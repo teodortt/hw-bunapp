@@ -9,7 +9,7 @@ import {
 import { Option } from "../../primitives/select";
 import { router, useGlobalSearchParams } from "expo-router";
 
-const SelectFilter = ({
+export const SelectFilter = ({
   placeholder,
   options,
 }: {
