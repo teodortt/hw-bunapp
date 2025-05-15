@@ -69,15 +69,19 @@ export const Filters = () => {
         <View className="gap-4 pt-10 border-t-2 border-t-[#FFA001]">
           <View className=" gap-2 items-start justify-start px-2">
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
-              <Text>Работна позиция</Text>
-              {!allKeysEmpty(params["position"]) && (
-                <TouchableOpacity
-                  onPress={() => router.setParams({ position: "" })}
-                  className={"rounded-md bg-primary"}
+              <Text className="font-bold">Работна позиция</Text>
+              <TouchableOpacity
+                onPress={() => router.setParams({ position: "" })}
+                className={"rounded-md bg-primary"}
+              >
+                <Text
+                  className={cn({
+                    "text-gray-600": allKeysEmpty(params["position"]),
+                  })}
                 >
-                  <Text>Изчисти</Text>
-                </TouchableOpacity>
-              )}
+                  Изчисти
+                </Text>
+              </TouchableOpacity>
             </View>
             <ScrollView
               horizontal
@@ -98,10 +102,10 @@ export const Filters = () => {
                           " bg-white/20 p-2 rounded-md mr-2",
                           params["position"]?.includes(
                             item.trim().toLocaleLowerCase()
-                          ) && "bg-white/50"
+                          ) && "bg-[#FFA001]"
                         )}
                       >
-                        <Text className="text-s text-white capitalize w-full h-fit">
+                        <Text className="text-s text-white font-semibold capitalize w-full h-fit">
                           {item}
                         </Text>
                       </TouchableOpacity>
@@ -114,14 +118,18 @@ export const Filters = () => {
           <View className=" gap-2 items-start justify-start px-2">
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
               <Text>Щат</Text>
-              {!allKeysEmpty(params["state"]) && (
-                <TouchableOpacity
-                  onPress={() => router.setParams({ state: "" })}
-                  className={"rounded-md bg-primary"}
+              <TouchableOpacity
+                onPress={() => router.setParams({ state: "" })}
+                className={"rounded-md bg-primary"}
+              >
+                <Text
+                  className={cn({
+                    "text-gray-600": allKeysEmpty(params["state"]),
+                  })}
                 >
-                  <Text>Изчисти</Text>
-                </TouchableOpacity>
-              )}
+                  Изчисти
+                </Text>
+              </TouchableOpacity>
             </View>
 
             <ScrollView
@@ -147,10 +155,10 @@ export const Filters = () => {
                           " bg-white/20 p-2 rounded-md mr-2 ",
                           params["state"]?.includes(
                             item.trim().toLocaleLowerCase()
-                          ) && "bg-white/50"
+                          ) && "bg-[#FFA001]"
                         )}
                       >
-                        <Text className="text-s text-white text-center uppercase w-full h-fit">
+                        <Text className="text-s text-white text-center font-semibold uppercase w-full h-fit">
                           {getFullStateName(item)}
                         </Text>
                       </TouchableOpacity>
