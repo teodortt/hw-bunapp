@@ -65,7 +65,7 @@ export default function OfferDetailsScreen() {
       </Text>
 
       {/* Wage */}
-      <Text className="text-lg font-medium mb-1">${offer.hourly_rate}/hr</Text>
+      <Text className="text-lg font-medium py-3">{offer.hourly_rate}</Text>
 
       {/* Features */}
       <View className="flex-row flex-wrap gap-2 mb-3">
@@ -82,6 +82,15 @@ export default function OfferDetailsScreen() {
             Tips available
           </Text>
         )}
+      </View>
+
+      <View className="py-8">
+        <Text className="text-gray-500 mb-1">Description</Text>
+        <Text className="text-gray-700">
+          {
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+          }
+        </Text>
       </View>
 
       {/* Link */}

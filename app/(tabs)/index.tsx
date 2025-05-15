@@ -1,106 +1,169 @@
-import { View, Pressable } from "react-native";
-import { useScrollToTop } from "@react-navigation/native";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+  ActivityIndicator,
+  RefreshControl,
+  Pressable,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { EmptyState } from "../../components/examples/components";
+import { images } from "../../components/examples/constants";
+import useApi, { getOffers, Offer } from "../../components/examples/useApi";
+import { Home } from "@/lib/icons/Home";
+import { SearchInput } from "@/components/examples/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
-import { eq } from "drizzle-orm";
-import { Link, Stack } from "expo-router";
-import * as React from "react";
-import { useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { Link, useLocalSearchParams } from "expo-router";
 
-import { Text } from "@/components/ui/text";
-import { habitTable } from "@/db/schema";
-import { Plus } from "@/components/Icons";
-import { useMigrationHelper } from "@/db/drizzle";
-import { useDatabase } from "@/db/provider";
-import { HabitCard } from "@/components/habit";
-import type { Habit } from "@/lib/storage";
-
-export default function Home() {
-  const { success, error } = useMigrationHelper();
-
-  if (error) {
-    return (
-      <View className="flex-1 gap-5 p-6 bg-secondary/30">
-        <Text>Migration error: {error.message}</Text>
-      </View>
-    );
-  }
-  if (!success) {
-    return (
-      <View className="flex-1 gap-5 p-6 bg-secondary/30">
-        <Text>Migration is in progress...</Text>
-      </View>
-    );
-  }
-
-  return <ScreenContent />;
-}
-
-function ScreenContent() {
-  const { db } = useDatabase();
-  const { data: habits, error } = useLiveQuery(
-    (db as any)?.select().from(habitTable).where(eq(habitTable.archived, false))
-  );
-
-  const ref = React.useRef(null);
-  useScrollToTop(ref);
-
-  const renderItem = React.useCallback(
-    ({ item }: { item: Habit }) => <HabitCard {...item} />,
-    []
-  );
-
-  if (error) {
-    return (
-      <View className="flex-1 items-center justify-center bg-secondary/30">
-        <Text className="text-destructive pb-2 ">Error Loading data</Text>
-      </View>
-    );
-  }
-  return (
-    <View className="flex flex-col basis-full bg-background  p-8">
-      <Stack.Screen
-        options={{
-          title: "Habits",
-        }}
-      />
-      <FlashList
-        ref={ref}
-        className="native:overflow-hidden rounded-t-lg"
-        estimatedItemSize={49}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => (
-          <View>
-            <Text className="text-lg">Hi There 👋</Text>
-            <Text className="text-sm">
-              This example use sql.js on Web and expo/sqlite on native
-            </Text>
-            <Text className="text-sm">
-              If you change the schema, you need to run{" "}
-              <Text className="text-sm font-mono text-muted-foreground bg-muted">
-                bun db:generate
-              </Text>
-              <Text className="text-sm px-1">then</Text>
-              <Text className="text-sm font-mono text-muted-foreground bg-muted">
-                bun migrate
-              </Text>
+const OfferCard = ({ item }: { item: Offer }) => (
+  <Link href={`/offers/${item.id}`} asChild>
+    <Pressable>
+      <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
+        <Image
+          source={{
+            uri: item.meta?.image,
+          }}
+          className="w-36 h-36"
+        />
+        <View className="flex-1 p-2 pl-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-lg font-bold text-white">
+              {item.position}
             </Text>
           </View>
-        )}
-        ItemSeparatorComponent={() => <View className="p-2" />}
-        data={habits}
-        renderItem={renderItem}
-        keyExtractor={(_, index) => `item-${index}`}
-        ListFooterComponent={<View className="py-4" />}
-      />
-      <View className="absolute web:bottom-20 bottom-10 right-8">
-        <Link href="/create" asChild>
-          <Pressable>
-            <View className="bg-primary justify-center rounded-full h-[45px] w-[45px]">
-              <Plus className="text-background self-center" />
-            </View>
-          </Pressable>
-        </Link>
+          <View className="flex-row items-center gap-2">
+            <Home className="text-foreground w-4 h-4" />
+            <Text className="text-sm text-gray-300">
+              {item.city}, {item.state}
+            </Text>
+          </View>
+
+          <View className="flex-row pt-2 gap-2 items-center">
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="flex-1"
+            >
+              <View className="flex-row items-center gap-2">
+                {item.features_list?.map((feature, index) => (
+                  <Text
+                    key={`${feature}-${index}`}
+                    className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
+                  >
+                    {feature}
+                  </Text>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+          <View className="flex-row justify-between items-center mt-4">
+            <Text className="text-lg font-bold text-white">
+              {item.hourly_rate}
+              {item.tips_available}
+            </Text>
+            <Text className="text-xs text-red-500">
+              {item.unavailable && "Sold out"}
+            </Text>
+          </View>
+        </View>
       </View>
-    </View>
+    </Pressable>
+  </Link>
+);
+
+const Offers = () => {
+  const { data: offers, loading, refetch } = useApi(getOffers);
+  const { searchQuery, position, state } = useLocalSearchParams();
+  const filter = typeof searchQuery === "string" ? searchQuery : "";
+
+  const filteredOffers = offers?.filter((offer) =>
+    Object.values(offer).some((value) => {
+      const isSearchMatch = filter
+        ? String(value).toLowerCase().includes(filter.toLowerCase())
+        : true;
+
+      const isPositionMatch =
+        Array.isArray(position) && position.length
+          ? position.some(
+              (p) => p.toLowerCase() === offer.position.trim().toLowerCase()
+            )
+          : true;
+
+      const isStateMatch =
+        Array.isArray(state) && state.length
+          ? state.some(
+              (s) => s.toLowerCase() === offer.state.trim().toLowerCase()
+            )
+          : true;
+
+      return isSearchMatch && isPositionMatch && isStateMatch;
+    })
   );
-}
+
+  if (!offers && loading) {
+    return (
+      <SafeAreaView className="bg-primary h-full flex items-center justify-center">
+        <ActivityIndicator size="large" color="#fff" />
+        <Text className="text-white mt-4">Loading offers...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView className="bg-primary h-full" edges={{ top: "additive" }}>
+      <FlashList<Offer>
+        data={filteredOffers}
+        renderItem={({ item }) => <OfferCard item={item} />}
+        keyExtractor={(item) => `${item.id}${item.meta?.link}`}
+        className="native:overflow-hidden rounded-t-lg"
+        estimatedItemSize={144}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={refetch}
+            colors={["#ff9f36"]} // Android spinner color(s)
+            tintColor="#ff9f36" // iOS spinner color
+          />
+        }
+        ListHeaderComponent={() => (
+          <View>
+            <View className="flex flex-row justify-between items-center p-4">
+              <View>
+                <TouchableOpacity onPress={() => refetch()}>
+                  <Text className="font-medium text-sm text-gray-100">
+                    Work and Travel
+                  </Text>
+
+                  <Text className="text-2xl font-semibold text-white">
+                    Работни оферти
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View className="mt-1.5">
+                <Image
+                  source={images.logoSmall}
+                  className="w-12 h-12"
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+
+            <View className="pb-4 px-1">
+              <SearchInput offers={offers || []} />
+            </View>
+          </View>
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="Няма налични оферти за тази категория"
+            subtitle="Няма намерени оферти"
+          />
+        )}
+      />
+    </SafeAreaView>
+  );
+};
+
+export default Offers;

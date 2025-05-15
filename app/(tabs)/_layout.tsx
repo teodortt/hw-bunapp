@@ -24,27 +24,25 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="offers"
+        name="index"
         options={{
-          title: "Offers",
+          title: "index",
           tabBarIcon: ({ focused }) => (
             <List className={focused ? "text-[#FFA001]" : `text-foreground`} />
           ),
           headerShown: false,
         }}
       />
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Habits",
-          tabBarIcon: ({ color }) => <BookOpen className="text-foreground" />,
-        }}
-      />
+
       <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => <Settings className="text-foreground" />,
+          tabBarIcon: ({ color, focused }) => (
+            <Settings
+              className={focused ? "text-[#FFA001]" : `text-foreground`}
+            />
+          ),
         }}
       />
     </Tabs>

@@ -121,17 +121,13 @@ export default function RootLayout() {
                     name="(tabs)"
                     options={{ headerShown: false }}
                   />
+
                   <Stack.Screen
                     options={{
                       headerShadowVisible: false,
+                      headerTitle: "",
                     }}
-                    name="habits/archive"
-                  />
-                  <Stack.Screen
-                    options={{
-                      headerShadowVisible: false,
-                    }}
-                    name="habits/[id]"
+                    name="offers/[id]"
                   />
                 </Stack>
               </SheetProvider>
