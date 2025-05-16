@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MMKV } from "react-native-mmkv";
+import { MMKV, useMMKVListener } from "react-native-mmkv";
 
 const storage = new MMKV();
 const FAVORITES_KEY = "favorites";
@@ -11,6 +11,12 @@ const getFavoriteIds = () => {
 
 export const useFavorites = () => {
   const [favorites, setFavorites] = useState(getFavoriteIds());
+
+  useMMKVListener((key: string) => {
+    if (key === FAVORITES_KEY) {
+      setFavorites(getFavoriteIds());
+    }
+  });
 
   const addFavorite = (id: string) => {
     const newFavorites = Array.from(new Set([...favorites, id]));
