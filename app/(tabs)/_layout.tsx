@@ -1,16 +1,9 @@
-import { Button, Text } from "@/components/ui";
 import { List } from "@/lib/icons/List";
-import { BookOpen } from "@/lib/icons/Book";
 import { Settings } from "@/lib/icons/Settings";
-
 import { Tabs } from "expo-router";
-import { Store } from "lucide-react-native";
-import { Pressable, View, Image, ImageSourcePropType } from "react-native";
 export const unstable_settings = {
   initialRouteName: "index",
 };
-
-import { images } from "../../components/examples/constants";
 
 export default function TabLayout() {
   return (

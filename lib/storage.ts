@@ -50,3 +50,30 @@ export async function deleteHabit(id: string): Promise<void> {
   const updatedHabits = habits.filter((habit) => habit.id !== id);
   await setHabits(updatedHabits);
 }
+
+// FAVORITES
+export const FAVORITES_KEY = "favorites";
+
+export const getFavoriteIds = () => {
+  const value = storage.getString(FAVORITES_KEY);
+  return value ? JSON.parse(value) : [];
+};
+
+export const addFavoriteId = (id: string) => {
+  const favorites = new Set(getFavoriteIds());
+  favorites.add(id);
+  storage.set(FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
+  console.log("Added favorite ID:", id);
+};
+
+export const removeFavoriteId = (id: string) => {
+  const favorites = new Set(getFavoriteIds());
+  favorites.delete(id);
+  storage.set(FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
+  console.log("Removed favorite ID:", id);
+};
+
+export const isFavoriteId = (id: string) => {
+  const favorites = new Set(getFavoriteIds());
+  return favorites.has(id);
+};
