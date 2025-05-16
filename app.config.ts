@@ -2,12 +2,12 @@ import type { ConfigContext, ExpoConfig } from "@expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "Expo Starter",
+  name: "HappyWorld",
   slug: "expostarter",
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/images/icon.png",
+  icon: "./assets/AppIcons/appstore.png",
   scheme: "ltstarter",
   userInterfaceStyle: "dark",
   runtimeVersion: {
