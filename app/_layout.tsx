@@ -126,6 +126,7 @@ export default function RootLayout() {
                     options={{
                       headerShadowVisible: false,
                       headerTitle: "",
+                      headerBackTitle: "Назад",
                     }}
                     name="offers/[id]"
                   />

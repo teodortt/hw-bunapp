@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import * as React from "react";
 import {
   ScrollView,
@@ -10,14 +10,25 @@ import {
 import { Text } from "@/components/ui/text";
 import useApi, { getOfferDetails } from "@/components/examples/useApi";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFavorites } from "@/lib/useFavorites";
+import { HeartIcon } from "lucide-react-native";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const navigation = useNavigation();
-  const router = useRouter();
+  const { isFavoriteId, addFavorite, removeFavorite } = useFavorites();
+  const isFavorite = isFavoriteId(id);
+
   const { data: offer, loading } = useApi(() => getOfferDetails(id));
 
-  console.log("offer", offer);
+  const handleFavoriteToggle = () => {
+    if (isFavorite) {
+      removeFavorite(id);
+      return;
+    }
+
+    addFavorite(id);
+  };
 
   if (!offer && !loading) {
     return (
@@ -42,7 +53,7 @@ export default function OfferDetailsScreen() {
   return (
     <ScrollView
       contentContainerStyle={{ padding: 24 }}
-      className="mx-auto w-full max-w-xl"
+      className="mx-auto w-full max-w-xl bg-primary"
       showsVerticalScrollIndicator={false}
       automaticallyAdjustContentInsets={false}
       contentInset={{ top: 12 }}
@@ -59,7 +70,16 @@ export default function OfferDetailsScreen() {
       )}
 
       {/* Position */}
-      <Text className="text-xl font-semibold">{offer.position}</Text>
+      <View className="flex-row justify-between items-center">
+        <Text className="text-xl font-semibold">{offer.position}</Text>
+        <TouchableOpacity onPress={handleFavoriteToggle}>
+          <HeartIcon
+            color={"#161622"}
+            fill={isFavorite ? "#ff9f36" : "#1f2937"}
+            size={30}
+          />
+        </TouchableOpacity>
+      </View>
       <Text className="text-gray-500 mb-2">
         {offer.city}, {offer.state}
       </Text>
@@ -96,9 +116,9 @@ export default function OfferDetailsScreen() {
       {/* Link */}
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        className="bg-primary px-4 py-3 rounded-xl mt-2"
+        className="bg-black-200 px-4 py-3 rounded-xl mt-2"
       >
-        <Text className="text-white text-center font-medium">Back</Text>
+        <Text className="text-white text-center font-medium">Назад</Text>
       </TouchableOpacity>
     </ScrollView>
   );
