@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { EmptyState } from "../../components/examples/components";
 import { images } from "../../components/examples/constants";
-import useApi, { getOffers, Offer } from "../../components/examples/useApi";
+import useApi, { getOffers } from "../../components/examples/useApi";
 import { Home } from "@/lib/icons/Home";
 import { SearchInput } from "@/components/examples/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
@@ -19,18 +19,21 @@ import { Link, useLocalSearchParams } from "expo-router";
 import { HeartIcon } from "lucide-react-native";
 
 import { useFavorites } from "@/lib/useFavorites";
+import { Offer } from "@/components/examples/ApiTypes";
 
 const OfferCard = ({ item }: { item: Offer }) => {
   const { isFavoriteId, addFavorite, removeFavorite } = useFavorites();
-  const isFavorite = isFavoriteId(item.id);
+
+  const id = item.id.toString();
+  const isFavorite = isFavoriteId(id);
 
   const handleFavoriteToggle = () => {
     if (isFavorite) {
-      removeFavorite(item.id);
+      removeFavorite(id);
       return;
     }
 
-    addFavorite(item.id);
+    addFavorite(id);
   };
   return (
     <Link href={`/offers/${item.id}`} asChild>
@@ -38,7 +41,7 @@ const OfferCard = ({ item }: { item: Offer }) => {
         <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
           <Image
             source={{
-              uri: item.meta?.image,
+              uri: item.meta.,
             }}
             className="w-36 h-36"
           />
