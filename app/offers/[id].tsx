@@ -25,7 +25,6 @@ export default function OfferDetailsScreen() {
     offer?.housing_available && "Housing available",
     offer?.english_level && `English level: ${offer.english_level}`,
     offer?.hours_per_week && `${offer.hours_per_week} hours/week`,
-    offer?.tips_available && "Tips available",
     offer?.start_date && `Start date: ${offer.start_date}`,
     offer?.end_date && `End date: ${offer.end_date}`,
   ].filter(Boolean);
@@ -67,7 +66,7 @@ export default function OfferDetailsScreen() {
       automaticallyAdjustContentInsets={false}
       contentInset={{ top: 12 }}
     >
-      <Text className="text-2xl font-bold mb-4">Job Offer</Text>
+      <Text className="text-2xl font-bold mb-4">{offer.position}</Text>
 
       {/* Image */}
       {offer?.image && (
@@ -78,9 +77,9 @@ export default function OfferDetailsScreen() {
         />
       )}
 
-      {/* Position */}
+      {/* Employer */}
       <View className="flex-row justify-between items-center">
-        <Text className="text-xl font-semibold">{offer.position}</Text>
+        <Text className="text-xl font-semibold">{offer.employer}</Text>
         <TouchableOpacity onPress={handleFavoriteToggle}>
           <HeartIcon
             color={"#161622"}
@@ -116,9 +115,7 @@ export default function OfferDetailsScreen() {
       <View className="py-8">
         <Text className="text-gray-500 mb-1">Description</Text>
         <Text className="text-gray-700">
-          {
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-          }
+          {offer.job_description || "No description available."}
         </Text>
       </View>
 
