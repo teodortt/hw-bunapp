@@ -1,8 +1,8 @@
 import { Alert } from "react-native";
 import { useEffect, useState } from "react";
-import { Offer, OfferDetails } from "./ApiTypes";
+import { OfferDetails, OfferResponse } from "./ApiTypes";
 
-const baseURL = "https://www.happyworld.bg/api/v2";
+export const baseURL = "https://www.happyworld.bg/api/v2";
 const AUTHORIZATION_TOKEN = "2b2a404823e6e719ed3b6d1f5e33ce32b59cb809";
 
 type ApiFunction<T> = () => Promise<T>;
@@ -34,15 +34,18 @@ const useApi = <T>(fn: ApiFunction<T>) => {
 
 export default useApi;
 
-export async function getOffers(): Promise<Offer[]> {
+export async function getOffers(): Promise<OfferResponse> {
   try {
-    const response = await fetch(`${baseURL}/offers/?type=home.WATJobPage`, {
-      method: "GET",
-      headers: {
-        Authorization: `Token ${AUTHORIZATION_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${baseURL}/offers/?type=home.WATJobPage&fields=*`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${AUTHORIZATION_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       console.error("Error fetching offers:", { res: response });
@@ -50,8 +53,6 @@ export async function getOffers(): Promise<Offer[]> {
     }
 
     const data = await response.json();
-
-    console.log("Fetched offers data:", data);
 
     return data;
   } catch (error) {
@@ -67,7 +68,14 @@ export async function getOffers(): Promise<Offer[]> {
 export async function getOfferDetails(id: string): Promise<OfferDetails> {
   try {
     const response = await fetch(
-      `https://sheets.livepolls.app/api/spreadsheets/ffc50341-04e8-438e-b58b-06367383f4f6/Offers/${id}`
+      `${baseURL}/offers/${id}?type=home.WATJobPage&fields=*`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${AUTHORIZATION_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
     );
 
     if (!response.ok) {

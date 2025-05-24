@@ -21,6 +21,15 @@ export default function OfferDetailsScreen() {
 
   const { data: offer, loading } = useApi(() => getOfferDetails(id));
 
+  const features_list = [
+    offer?.housing_available && "Housing available",
+    offer?.english_level && `English level: ${offer.english_level}`,
+    offer?.hours_per_week && `${offer.hours_per_week} hours/week`,
+    offer?.tips_available && "Tips available",
+    offer?.start_date && `Start date: ${offer.start_date}`,
+    offer?.end_date && `End date: ${offer.end_date}`,
+  ].filter(Boolean);
+
   const handleFavoriteToggle = () => {
     if (isFavorite) {
       removeFavorite(id);
@@ -61,9 +70,9 @@ export default function OfferDetailsScreen() {
       <Text className="text-2xl font-bold mb-4">Job Offer</Text>
 
       {/* Image */}
-      {offer?.meta?.image && (
+      {offer?.image && (
         <Image
-          source={{ uri: offer.meta.image }}
+          source={{ uri: offer.image.meta.download_url }}
           className="w-full h-48 rounded-2xl mb-4"
           resizeMode="cover"
         />
@@ -89,7 +98,7 @@ export default function OfferDetailsScreen() {
 
       {/* Features */}
       <View className="flex-row flex-wrap gap-2 mb-3">
-        {offer.features_list.map((feature, index) => (
+        {features_list.map((feature, index) => (
           <Text
             key={index}
             className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -118,7 +127,9 @@ export default function OfferDetailsScreen() {
         onPress={() => navigation.goBack()}
         className="bg-black-200 px-4 py-3 rounded-xl mt-2"
       >
-        <Text className="text-white text-center font-medium">Назад</Text>
+        <Text className="text-white text-center font-medium">
+          Направи запитване
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );

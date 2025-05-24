@@ -20,6 +20,7 @@ import { HeartIcon } from "lucide-react-native";
 
 import { useFavorites } from "@/lib/useFavorites";
 import { Offer } from "@/components/examples/ApiTypes";
+import { cn } from "@/lib/utils";
 
 const OfferCard = ({ item }: { item: Offer }) => {
   const { isFavoriteId, addFavorite, removeFavorite } = useFavorites();
@@ -35,13 +36,19 @@ const OfferCard = ({ item }: { item: Offer }) => {
 
     addFavorite(id);
   };
+
+  const features_list = [
+    `English: ${item.english_level}`,
+    `${item.hours_per_week} hrs/week`,
+  ];
+
   return (
     <Link href={`/offers/${item.id}`} asChild>
       <Pressable>
         <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
           <Image
             source={{
-              uri: item.meta.,
+              uri: `https://www.happyworld.bg${item.image.meta.download_url}`,
             }}
             className="w-36 h-36"
           />
@@ -52,7 +59,7 @@ const OfferCard = ({ item }: { item: Offer }) => {
               </Text>
               <TouchableOpacity onPress={handleFavoriteToggle}>
                 <HeartIcon
-                  color={"#161622"}
+                  color={isFavorite ? "#ff9f36" : "#57513e"}
                   fill={isFavorite ? "#ff9f36" : "#1f2937"}
                 />
               </TouchableOpacity>
@@ -65,31 +72,41 @@ const OfferCard = ({ item }: { item: Offer }) => {
             </View>
 
             <View className="flex-row pt-2 gap-2 items-center">
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="flex-1"
-              >
-                <View className="flex-row items-center gap-2">
-                  {item.features_list?.map((feature, index) => (
-                    <Text
-                      key={`${feature}-${index}`}
-                      className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
-                    >
-                      {feature}
-                    </Text>
-                  ))}
-                </View>
-              </ScrollView>
+              <View className="flex-row items-center gap-2 flex-wrap">
+                {features_list?.map((feature, index) => (
+                  <Text
+                    key={`${feature}-${index}`}
+                    className="text-xs text-white bg-white/20 px-2 py-1 rounded-md"
+                  >
+                    {feature}
+                  </Text>
+                ))}
+              </View>
             </View>
             <View className="flex-row justify-between items-center mt-4">
               <Text className="text-lg font-bold text-white">
-                {item.hourly_rate}
-                {item.tips_available}
+                ${item.hourly_rate}
+                {item.tips_available && " + tips"}
               </Text>
-              <Text className="text-xs text-red-500">
-                {item.unavailable && "Sold out"}
-              </Text>
+              <View className="flex-row items-center gap-2">
+                {!item.unavailable && item.just_few_left && (
+                  <Text className="text-xs text-yellow-300">
+                    Just a few left
+                  </Text>
+                )}
+                {item.top_offer && (
+                  <Text
+                    className={cn("text-xs text-[#ff9f36]", {
+                      "line-through text-slate-600": item.unavailable,
+                    })}
+                  >
+                    Top offer
+                  </Text>
+                )}
+                {item.unavailable && (
+                  <Text className="text-xs text-red-500">Sold out</Text>
+                )}
+              </View>
             </View>
           </View>
         </View>
@@ -99,9 +116,11 @@ const OfferCard = ({ item }: { item: Offer }) => {
 };
 
 const Offers = () => {
-  const { data: offers, loading, refetch } = useApi(getOffers);
+  const { data: offersData, loading, refetch } = useApi(getOffers);
   const { searchQuery, position, state } = useLocalSearchParams();
   const filter = typeof searchQuery === "string" ? searchQuery : "";
+
+  const offers = offersData?.results;
 
   const filteredOffers = offers?.filter((offer) =>
     Object.values(offer).some((value) => {
@@ -141,7 +160,7 @@ const Offers = () => {
       <FlashList<Offer>
         data={filteredOffers}
         renderItem={({ item }) => <OfferCard item={item} />}
-        keyExtractor={(item) => `${item.id}${item.meta?.link}`}
+        keyExtractor={(item) => `${item.id}${item.meta?.html_url}`}
         className="native:overflow-hidden rounded-t-lg"
         estimatedItemSize={144}
         refreshControl={
