@@ -1,10 +1,10 @@
 import { View, TouchableOpacity, TextInput } from "react-native";
 import { useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Offer } from "../useApi";
 import { Filter, SearchIcon } from "lucide-react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import { allKeysEmpty } from "@/lib/utils";
+import { Offer } from "../ApiTypes";
 
 export const SearchInput = ({ offers }: { offers: Offer[] }) => {
   const params = useLocalSearchParams();
