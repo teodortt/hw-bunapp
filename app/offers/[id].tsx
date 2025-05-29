@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import * as React from "react";
 import RenderHTML from "react-native-render-html";
 import {
@@ -17,7 +17,6 @@ import { SheetManager } from "react-native-actions-sheet";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const navigation = useNavigation();
   const { isFavoriteId, addFavorite, removeFavorite } = useFavorites();
   const isFavorite = isFavoriteId(id);
 
@@ -118,7 +117,7 @@ export default function OfferDetailsScreen() {
         </View>
 
         <View className="py-8">
-          <Text className="text-gray-500 mb-1">Description</Text>
+          <Text className="text-gray-500 mb-1">Описание</Text>
           <RenderHTML
             baseStyle={{ color: "#FFF" }}
             WebView={Text}
