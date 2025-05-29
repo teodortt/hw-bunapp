@@ -1,6 +1,5 @@
 import { useLocalSearchParams } from "expo-router";
 import * as React from "react";
-import RenderHTML from "react-native-render-html";
 import {
   ScrollView,
   Image,
@@ -15,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFavorites } from "@/lib/useFavorites";
 import { HeartIcon, MessageCircle } from "lucide-react-native";
 import { SheetManager } from "react-native-actions-sheet";
+import HTMLView from "react-native-htmlview";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -120,12 +120,16 @@ export default function OfferDetailsScreen() {
 
         <View className="py-8">
           <Text className="text-gray-500 mb-1">Описание</Text>
-          <RenderHTML
-            baseStyle={{ color: "#FFF" }}
-            WebView={Text}
-            contentWidth={width}
-            source={{
-              html: offer.job_description || "No description available.",
+
+          <HTMLView
+            value={offer.job_description || "No description available."}
+            stylesheet={{
+              p: { color: "#fff", fontSize: 16 },
+              a: { color: "#fff", fontSize: 16 },
+              strong: { color: "#fff", fontSize: 16 },
+              ul: { color: "#fff", fontSize: 16 },
+              li: { color: "#fff", fontSize: 16 },
+              div: { color: "#fff", fontSize: 16 },
             }}
           />
         </View>
