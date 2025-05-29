@@ -14,6 +14,7 @@ import { getItem, setItem } from "@/lib/storage";
 import { Platform } from "react-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import "../components/sheets/sheets";
+import { Header } from "@/components/examples/components/header";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
@@ -123,12 +124,12 @@ export default function RootLayout() {
                   />
 
                   <Stack.Screen
+                    name="offers/[id]"
                     options={{
                       headerShadowVisible: false,
-                      headerTitle: "",
                       headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
                     }}
-                    name="offers/[id]"
                   />
                 </Stack>
               </SheetProvider>

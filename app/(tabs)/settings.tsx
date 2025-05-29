@@ -20,7 +20,7 @@ export default function Settings() {
     }
   };
   return (
-    <ScrollView className="flex-1 w-full px-6 bg-background pt-4 gap-y-6">
+    <ScrollView className="flex-1 w-full px-6 bg-primary pt-4 gap-y-6">
       <List>
         <ListHeader>
           <Muted>App</Muted>
@@ -32,23 +32,19 @@ export default function Settings() {
         </ListHeader>
         <ListItem
           itemLeft={(props) => <Star {...props} />} // props adds size and color attributes
-          label="Give us a start"
+          label="Оценете приложението"
+          className="rounded-t-lg"
           // onPress={() => openExternalURL("https://github.com/expo-starter/expo-template")}
           onPress={() => SheetManager.show("testSheet2")}
         />
         <ListItem
-          itemLeft={(props) => <Send {...props} />} // props adds size and color attributes
-          label="Send Feedback"
-          onPress={() => openExternalURL("https://expostarter.com")}
-        />
-        <ListItem
           itemLeft={(props) => <Shield {...props} />} // props adds size and color attributes
-          label="Privacy Policy"
+          label="Декларация за поверителност"
           onPress={() => openExternalURL("https://expostarter.com")}
         />
         <ListItem
           itemLeft={(props) => <BookOpen {...props} />} // props adds size and color attributes
-          label="Terms of service"
+          label="Общи условия"
           onPress={() => openExternalURL("https://expostarter.com")}
         />
       </List>

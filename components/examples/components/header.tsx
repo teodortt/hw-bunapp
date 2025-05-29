@@ -1,0 +1,41 @@
+import { View, Text, Image } from "react-native";
+import { images } from "../constants";
+import { useNavigation } from "expo-router";
+
+export const Header = ({ backButton }: { backButton?: boolean }) => {
+  const navigation = useNavigation();
+
+  return (
+    <View
+      style={{
+        height: 120,
+        width: "100%",
+        backgroundColor: "#161622",
+        borderBottomColor: "#FFA001",
+        borderBottomWidth: 1,
+        flexDirection: "row",
+        alignItems: "flex-end",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+        paddingBottom: 10,
+      }}
+    >
+      <View>
+        {backButton && (
+          <Text
+            onPress={() => navigation.goBack()}
+            className="text-secondary pb-2"
+          >{`< Назад`}</Text>
+        )}
+      </View>
+      <Image
+        source={images.logo}
+        style={{
+          width: 100,
+          height: 40,
+          resizeMode: "contain",
+        }}
+      />
+    </View>
+  );
+};

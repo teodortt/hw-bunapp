@@ -1,6 +1,7 @@
 import { List } from "@/lib/icons/List";
 import { Settings } from "@/lib/icons/Settings";
 import { Tabs } from "expo-router";
+import { Header } from "@/components/examples/components/header";
 export const unstable_settings = {
   initialRouteName: "index",
 };
@@ -19,7 +20,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "index",
+          title: "Оферти",
           tabBarIcon: ({ focused }) => (
             <List className={focused ? "text-[#FFA001]" : `text-foreground`} />
           ),
@@ -30,10 +31,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Settings",
+          title: "Настройки",
+          header: () => <Header />,
           tabBarIcon: ({ color, focused }) => (
             <Settings
-              className={focused ? "text-[#FFA001]" : `text-foreground`}
+              className={focused ? "text-[#FFA001]" : "text-foreground"}
             />
           ),
         }}
