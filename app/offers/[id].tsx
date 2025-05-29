@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   View,
   TouchableOpacity,
+  useWindowDimensions,
 } from "react-native";
 import { Text } from "@/components/ui/text";
 import useApi, { getOfferDetails } from "@/components/examples/useApi";
@@ -17,6 +18,7 @@ import { SheetManager } from "react-native-actions-sheet";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { width } = useWindowDimensions();
   const { isFavoriteId, addFavorite, removeFavorite } = useFavorites();
   const isFavorite = isFavoriteId(id);
 
@@ -121,6 +123,7 @@ export default function OfferDetailsScreen() {
           <RenderHTML
             baseStyle={{ color: "#FFF" }}
             WebView={Text}
+            contentWidth={width}
             source={{
               html: offer.job_description || "No description available.",
             }}
