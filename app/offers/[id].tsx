@@ -13,6 +13,7 @@ import useApi, { getOfferDetails } from "@/components/examples/useApi";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFavorites } from "@/lib/useFavorites";
 import { HeartIcon, MessageCircle } from "lucide-react-native";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -129,7 +130,14 @@ export default function OfferDetailsScreen() {
       </ScrollView>
 
       {/* Fixed Floating Button */}
-      <TouchableOpacity className="absolute bottom-5 right-5 w-16 h-16 bg-[#ff9f36] rounded-full justify-center items-center shadow-lg">
+      <TouchableOpacity
+        onPress={() =>
+          SheetManager.show("inquiry", {
+            payload: offer,
+          })
+        }
+        className="absolute bottom-5 right-5 w-16 h-16 bg-[#ff9f36] rounded-full justify-center items-center shadow-lg"
+      >
         <Text className="text-white text-2xl">
           <MessageCircle color="white" />
         </Text>
