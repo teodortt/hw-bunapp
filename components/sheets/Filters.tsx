@@ -1,7 +1,6 @@
 import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/ui//text";
 import { XIcon } from "lucide-react-native";
-import { Offer } from "../examples/useApi";
 import { router, useGlobalSearchParams } from "expo-router";
 import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
 import { getFullStateName } from "@/lib/getStatename";
@@ -10,6 +9,7 @@ import ActionSheet, {
   useSheetRef,
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Offer } from "../examples/ApiTypes";
 
 export const Filters = () => {
   const offers: Offer[] = useSheetPayload("payload");
