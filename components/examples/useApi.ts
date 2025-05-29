@@ -67,16 +67,13 @@ export async function getOffers(): Promise<OfferResponse> {
 
 export async function getOfferDetails(id: string): Promise<OfferDetails> {
   try {
-    const response = await fetch(
-      `${baseURL}/offers/${id}?type=home.WATJobPage&fields=*`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Token ${AUTHORIZATION_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${baseURL}/offers/${id}/`, {
+      method: "GET",
+      headers: {
+        Authorization: `Token ${AUTHORIZATION_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Error: ${response.status} - ${response.statusText}`);
