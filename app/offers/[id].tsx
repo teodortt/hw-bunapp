@@ -99,7 +99,7 @@ export default function OfferDetailsScreen() {
         </Text>
 
         {/* Wage */}
-        <Text className="text-lg font-medium py-3">{offer.hourly_rate}</Text>
+        <Text className="text-lg font-bold py-3">${offer.hourly_rate}</Text>
 
         {/* Features */}
         <View className="flex-row flex-wrap gap-2 mb-3">
@@ -122,7 +122,7 @@ export default function OfferDetailsScreen() {
           <Text className="text-gray-500 mb-1">Описание</Text>
 
           <HTMLView
-            value={offer.job_description || "No description available."}
+            value={offer.job_description || "<p>No description available.</p>"}
             stylesheet={{
               p: { color: "#fff", fontSize: 16 },
               a: { color: "#fff", fontSize: 16 },
@@ -130,6 +130,20 @@ export default function OfferDetailsScreen() {
               ul: { color: "#fff", fontSize: 16 },
               li: { color: "#fff", fontSize: 16 },
               div: { color: "#fff", fontSize: 16 },
+              span: { color: "#fff", fontSize: 16 },
+              blockquote: {
+                color: "#fff",
+                fontSize: 16,
+                borderLeftWidth: 4,
+                borderLeftColor: "#ff9f36",
+                paddingLeft: 16,
+              },
+              h1: { color: "#fff", fontSize: 20, fontWeight: "bold" },
+              h2: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+              h3: { color: "#fff", fontSize: 16, fontWeight: "bold" },
+              h4: { color: "#fff", fontSize: 14, fontWeight: "bold" },
+              h5: { color: "#fff", fontSize: 12, fontWeight: "bold" },
+              h6: { color: "#fff", fontSize: 10, fontWeight: "bold" },
             }}
           />
         </View>

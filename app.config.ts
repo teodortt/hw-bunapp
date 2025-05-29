@@ -7,14 +7,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/AppIcons/appstore.png",
+  icon: "./assets/AppIcons/playstore1024.png",
   scheme: "ltstarter",
   userInterfaceStyle: "dark",
   runtimeVersion: {
     policy: "appVersion",
   },
   splash: {
-    image: "./assets/images/splash.png",
+    image: "./assets/AppIcons/splash.png",
     resizeMode: "contain",
     backgroundColor: "#ffffff",
   },
@@ -25,7 +25,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/images/adaptive-icon.png",
+      foregroundImage: "./assets/AppIcons/playstore1024.png",
       backgroundColor: "#ffffff",
     },
     package: "com.expostarter.base",

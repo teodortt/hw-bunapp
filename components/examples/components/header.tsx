@@ -24,7 +24,7 @@ export const Header = ({ backButton }: { backButton?: boolean }) => {
         {backButton && (
           <Text
             onPress={() => navigation.goBack()}
-            className="text-secondary pb-2"
+            className="text-secondary pb-2 font-bold"
           >{`< Назад`}</Text>
         )}
       </View>
