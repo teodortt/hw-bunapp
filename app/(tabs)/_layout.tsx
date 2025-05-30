@@ -2,6 +2,7 @@ import { List } from "@/lib/icons/List";
 import { Settings } from "@/lib/icons/Settings";
 import { Tabs } from "expo-router";
 import { Header } from "@/components/examples/components/header";
+import { UserCog2 } from "lucide-react-native";
 export const unstable_settings = {
   initialRouteName: "index",
 };
@@ -12,7 +13,9 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: "#FFA001",
         tabBarInactiveTintColor: "#CDCDE0",
+        animation: "shift",
         tabBarStyle: {
+          height: 60,
           backgroundColor: "#161622",
         },
       }}
@@ -31,12 +34,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          title: "Настройки",
+          title: "Профил",
           header: () => <Header />,
           tabBarIcon: ({ color, focused }) => (
-            <Settings
-              className={focused ? "text-[#FFA001]" : "text-foreground"}
-            />
+            <UserCog2 color={focused ? "#FFA001" : "white"} />
           ),
         }}
       />
