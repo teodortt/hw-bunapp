@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/AppIcons/playstoreJPG.jpg",
+  icon: "./assets/AppIcons/square.png",
   scheme: "ltstarter",
   userInterfaceStyle: "dark",
   runtimeVersion: {
@@ -22,10 +22,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.expostarter.base",
+    icon: "./assets/AppIcons/appstore.png",
   },
   android: {
     adaptiveIcon: {
-      foregroundImage: "./assets/AppIcons/playstore1024.png",
+      foregroundImage: "./assets/AppIcons/square.png",
       backgroundColor: "#ffffff",
     },
     package: "com.expostarter.base",
