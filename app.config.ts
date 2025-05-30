@@ -7,7 +7,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
-  icon: "./assets/AppIcons/playstore1024.png",
+  icon: "./assets/AppIcons/playstoreJPG.jpg",
   scheme: "ltstarter",
   userInterfaceStyle: "dark",
   runtimeVersion: {
@@ -33,7 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   web: {
     bundler: "metro",
     output: "single",
-    favicon: "./assets/images/favicon.png",
+    favicon: "./assets/AppIcons/favicon.png",
   },
   plugins: [["expo-router"], ["expo-sqlite"]],
   experiments: {

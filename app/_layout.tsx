@@ -117,7 +117,7 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheetModalProvider>
               <SheetProvider>
-                <Stack screenOptions={{ animation: "slide_from_right" }}>
+                <Stack screenOptions={{ animation: "ios_from_right" }}>
                   <Stack.Screen
                     name="(tabs)"
                     options={{ headerShown: false }}
