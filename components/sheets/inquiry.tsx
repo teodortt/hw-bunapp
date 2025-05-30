@@ -15,9 +15,9 @@ export const Inquiry = () => {
       gestureEnabled
       indicatorStyle={{ width: 0 }}
       safeAreaInsets={insets}
-      containerStyle={{ height: 300, backgroundColor: "#232533" }}
+      containerStyle={{ height: 350, backgroundColor: "#232533" }}
     >
-      <View className="h-full bg-[#232533] px-6 justify-center">
+      <View className="h-full bg-[#232533] px-6 justify-start">
         <Text className="text-2xl font-semibold text-center pb-8 text-white">
           Безплатна консултация
         </Text>
