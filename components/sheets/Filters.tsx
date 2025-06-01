@@ -1,6 +1,6 @@
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/ui//text";
-import { XIcon } from "lucide-react-native";
+import { ArrowLeft, XIcon } from "lucide-react-native";
 import { router, useGlobalSearchParams } from "expo-router";
 import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
 import { getFullStateName } from "@/lib/getStatename";
@@ -10,12 +10,15 @@ import ActionSheet, {
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Offer } from "../examples/ApiTypes";
+import { useState } from "react";
 
 export const Filters = () => {
   const offers: Offer[] = useSheetPayload("payload");
   const insets = useSafeAreaInsets();
   const ref = useSheetRef();
   const params = useGlobalSearchParams();
+  const searchQuery = params["searchQuery"];
+  const [query, setQuery] = useState(searchQuery || "");
   const offersRows = splitIntoRows(offers.map((offer) => offer.position));
   const statesRows = splitIntoRows(offers.map((offer) => offer.state));
 
@@ -44,6 +47,11 @@ export const Filters = () => {
     });
   };
 
+  const handleClear = () => {
+    setQuery("");
+    router.setParams({ position: "", state: "", searchQuery: "" });
+  };
+
   return (
     <ActionSheet
       isModal={false}
@@ -51,10 +59,9 @@ export const Filters = () => {
       safeAreaInsets={insets}
       snapPoints={[100]}
       gestureEnabled
-      closable={false}
       disableDragBeyondMinimumSnapPoint
       containerStyle={{
-        height: 500,
+        height: "100%",
         backgroundColor: "#161622",
         paddingHorizontal: 12,
       }}
@@ -63,9 +70,36 @@ export const Filters = () => {
         <View className="flex-row items-center justify-between pb-2">
           <Text className="text-foreground text-xl font-bold">Филтри</Text>
           <TouchableOpacity onPress={() => ref.current.hide()}>
-            <XIcon color="#FFA001" />
+            <Text className="text-[#FFA001]">Затвори</Text>
           </TouchableOpacity>
         </View>
+
+        {/* search */}
+        <View className="flex-row items-center gap-6 space-x-4 w-full h-12 px-4 bg-black-200 rounded-2xl border-2 border-neutral-800 focus:border-secondary">
+          <TouchableOpacity onPress={() => ref.current.hide()}>
+            <ArrowLeft color="#CDCDE0" size={20} />
+          </TouchableOpacity>
+
+          <TextInput
+            className="text-start text-white flex-1 font-pregular"
+            value={query as string}
+            placeholder="Търсене"
+            placeholderTextColor="#CDCDE0"
+            onChangeText={(e) => setQuery(e)}
+            onSubmitEditing={() => {
+              router.setParams({ searchQuery: query });
+              ref.current.hide();
+            }}
+          />
+
+          {query && (
+            <TouchableOpacity onPress={handleClear}>
+              <XIcon color="#ff9f36" size={20} />
+            </TouchableOpacity>
+          )}
+        </View>
+        {/* search */}
+
         <View className="gap-4 pt-10 border-t-2 border-t-[#FFA001]">
           <View className=" gap-2 items-start justify-start px-2">
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
