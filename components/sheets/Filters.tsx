@@ -12,6 +12,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Offer } from "../examples/ApiTypes";
 import { useState } from "react";
 
+type FilterKey = "position" | "state";
+
 export const Filters = () => {
   const offers: Offer[] = useSheetPayload("payload");
   const insets = useSafeAreaInsets();
@@ -19,12 +21,16 @@ export const Filters = () => {
   const params = useGlobalSearchParams();
   const searchQuery = params["searchQuery"];
   const [query, setQuery] = useState(searchQuery || "");
+  const [filters, setFilters] = useState({
+    position: params["position"] || "",
+    state: params["state"] || "",
+  });
   const offersRows = splitIntoRows(offers.map((offer) => offer.position));
   const statesRows = splitIntoRows(offers.map((offer) => offer.state));
 
-  const handleChangeParams = (key: string, param: string) => {
+  const handleChangeParams = (key: FilterKey, param: string) => {
     const item = param.trim().toLowerCase();
-    const currentParam = params[key];
+    const currentParam = filters[key];
     const currentValues: string[] = Array.isArray(currentParam)
       ? currentParam
       : currentParam
@@ -42,9 +48,10 @@ export const Filters = () => {
     }
 
     // Set params only if there are values, else remove the param
-    router.setParams({
-      ...(updatedValues.length > 0 ? { [key]: updatedValues } : { [key]: "" }),
-    });
+    setFilters((prev) => ({
+      ...prev,
+      [key]: updatedValues.length > 0 ? updatedValues : "",
+    }));
   };
 
   const handleClear = () => {
@@ -55,11 +62,11 @@ export const Filters = () => {
   return (
     <ActionSheet
       isModal={false}
-      backgroundInteractionEnabled={false}
       safeAreaInsets={insets}
       snapPoints={[100]}
-      gestureEnabled
-      disableDragBeyondMinimumSnapPoint
+      onBeforeClose={() => {
+        router.setParams({ ...filters, searchQuery: query });
+      }}
       containerStyle={{
         height: "100%",
         backgroundColor: "#161622",
@@ -105,12 +112,14 @@ export const Filters = () => {
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
               <Text className="font-bold">Работна позиция</Text>
               <TouchableOpacity
-                onPress={() => router.setParams({ position: "" })}
+                onPress={() =>
+                  setFilters((prev) => ({ ...prev, position: "" }))
+                }
                 className={"rounded-md bg-primary"}
               >
                 <Text
                   className={cn({
-                    "text-gray-600": allKeysEmpty(params["position"]),
+                    "text-gray-600": allKeysEmpty(filters["position"]),
                   })}
                 >
                   Изчисти
@@ -134,7 +143,7 @@ export const Filters = () => {
                         onPress={() => handleChangeParams("position", item)}
                         className={cn(
                           " bg-white/20 p-2 rounded-md mr-2",
-                          params["position"]?.includes(
+                          filters["position"]?.includes(
                             item.trim().toLocaleLowerCase()
                           ) && "bg-[#FFA001]"
                         )}
@@ -153,12 +162,12 @@ export const Filters = () => {
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
               <Text>Щат</Text>
               <TouchableOpacity
-                onPress={() => router.setParams({ state: "" })}
+                onPress={() => setFilters((prev) => ({ ...prev, state: "" }))}
                 className={"rounded-md bg-primary"}
               >
                 <Text
                   className={cn({
-                    "text-gray-600": allKeysEmpty(params["state"]),
+                    "text-gray-600": allKeysEmpty(filters["state"]),
                   })}
                 >
                   Изчисти
@@ -187,7 +196,7 @@ export const Filters = () => {
                         }}
                         className={cn(
                           " bg-white/20 p-2 rounded-md mr-2 ",
-                          params["state"]?.includes(
+                          filters["state"]?.includes(
                             item.trim().toLocaleLowerCase()
                           ) && "bg-[#FFA001]"
                         )}
