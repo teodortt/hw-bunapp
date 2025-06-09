@@ -1,6 +1,6 @@
 import { ScrollView, TextInput, TouchableOpacity, View } from "react-native";
 import { Text } from "@/components/ui//text";
-import { ArrowLeft, XIcon } from "lucide-react-native";
+import { ArrowLeft, Heart, List, XIcon } from "lucide-react-native";
 import { router, useGlobalSearchParams } from "expo-router";
 import { allKeysEmpty, cn, splitIntoRows } from "@/lib/utils";
 import { getFullStateName } from "@/lib/getStatename";
@@ -20,6 +20,7 @@ export const Filters = () => {
   const ref = useSheetRef();
   const params = useGlobalSearchParams();
   const searchQuery = params["searchQuery"];
+  const showFavorites = params["showFavorites"] === "true";
   const [query, setQuery] = useState(searchQuery || "");
   const [filters, setFilters] = useState({
     position: params["position"] || "",
@@ -54,6 +55,16 @@ export const Filters = () => {
     }));
   };
 
+  const handleFavorites = () => {
+    ref.current.hide();
+    if (showFavorites) {
+      router.setParams({ showFavorites: "false" });
+      return;
+    }
+
+    router.setParams({ showFavorites: "true" });
+  };
+
   const handleClear = () => {
     setQuery("");
     router.setParams({ position: "", state: "", searchQuery: "" });
@@ -74,10 +85,22 @@ export const Filters = () => {
       }}
     >
       <View className="gap-3">
-        <View className="flex-row items-center justify-between pb-2">
-          <Text className="text-foreground text-xl font-bold">Филтри</Text>
+        <View className="flex-row items-center justify-between pb-4">
+          <TouchableOpacity
+            className="flex-row items-center gap-2"
+            onPress={handleFavorites}
+          >
+            {!showFavorites ? (
+              <Heart size={14} color="transparent" fill="red" />
+            ) : (
+              <List size={14} color="white" />
+            )}
+            <Text className="text-white font-bold">
+              {showFavorites ? "Покажи всички" : "Любими"}
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => ref.current.hide()}>
-            <Text className="text-[#FFA001]">Затвори</Text>
+            <Text className="text-[#FFA001] font-bold">Затвори</Text>
           </TouchableOpacity>
         </View>
 
@@ -107,8 +130,8 @@ export const Filters = () => {
         </View>
         {/* search */}
 
-        <View className="gap-4 pt-10 border-t-2 border-t-[#FFA001]">
-          <View className=" gap-2 items-start justify-start px-2">
+        <View className="gap-4 pt-5 border-t-2 border-t-[#FFA001]">
+          <View className="gap-2 items-start justify-start px-2">
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
               <Text className="font-bold">Работна позиция</Text>
               <TouchableOpacity

@@ -16,11 +16,15 @@ import { useLocalSearchParams } from "expo-router";
 
 import { Offer } from "@/components/examples/ApiTypes";
 import { OfferCard } from "@/components/offer/offer";
+import { useFavorites } from "@/lib/useFavorites";
 
 const Offers = () => {
   const { data: offersData, loading, refetch } = useApi(getOffers);
-  const { searchQuery, position, state } = useLocalSearchParams();
+  const { favorites } = useFavorites();
+  const { searchQuery, position, state, showFavorites } =
+    useLocalSearchParams();
   const filter = typeof searchQuery === "string" ? searchQuery : "";
+  const showFav = showFavorites == "true";
 
   const offers = offersData?.results;
 
@@ -44,7 +48,12 @@ const Offers = () => {
             )
           : true;
 
-      return isSearchMatch && isPositionMatch && isStateMatch;
+      const isFavoriteMatch =
+        !showFav || favorites.includes(offer.id.toString());
+
+      return (
+        isSearchMatch && isPositionMatch && isStateMatch && isFavoriteMatch
+      );
     })
   );
 
