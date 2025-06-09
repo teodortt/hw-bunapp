@@ -66,11 +66,9 @@ export const Filters = () => {
       snapPoints={[100]}
       gestureEnabled={true}
       openAnimationConfig={{ overshootClamping: true }}
-      onBeforeClose={() => {
-        router.setParams({ ...filters, searchQuery: query });
-      }}
+      onBeforeClose={() => router.setParams({ ...filters, searchQuery: query })}
       containerStyle={{
-        height: "100%",
+        height: "70%",
         backgroundColor: "#161622",
         paddingHorizontal: 12,
       }}

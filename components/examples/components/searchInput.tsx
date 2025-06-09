@@ -26,7 +26,7 @@ export const SearchInput = ({ offers }: { offers: Offer[] }) => {
         <SearchIcon color="#CDCDE0" size={20} />
 
         <Text className="text-start text-[#CDCDE0] flex-1 font-pregular">
-          {searchQuery || "Търсене"}
+          {searchQuery || "Търсене и филтриране"}
         </Text>
 
         <View className="flex-row items-center gap-4">
