@@ -4,12 +4,14 @@ import List, { ListHeader } from "@/components/ui/list";
 import ListItem from "@/components/ui/list-item";
 import { Muted } from "@/components/ui/typography";
 import { ScrollView } from "react-native-gesture-handler";
-import { Archive, Bell, BookOpen, Send, Shield, Star } from "@/lib/icons";
+import { BookOpen, Shield, Star } from "@/lib/icons";
 import * as WebBrowser from "expo-web-browser";
 
 import { ThemeSettingItem } from "@/components/settings/ThemeItem";
 import { NotificationItem } from "@/components/settings/NotificationItem";
 import { SheetManager } from "react-native-actions-sheet";
+import { Heart } from "lucide-react-native";
+import { router } from "expo-router";
 
 export default function Settings() {
   const openExternalURL = (url: string) => {
@@ -25,10 +27,16 @@ export default function Settings() {
         <ListHeader>
           <Muted>App</Muted>
         </ListHeader>
-        <ThemeSettingItem />
-        {Platform.OS !== "web" && <NotificationItem />}
+        <ListItem
+          itemLeft={(props) => <Heart color="white" />} // props adds size and color attributes
+          label="Любими"
+          className="rounded-t-lg"
+          onPress={() => router.push("/")}
+        />
+        {/* <ThemeSettingItem /> */}
+        {/* {Platform.OS !== "web" && <NotificationItem />} */}
         <ListHeader className="pt-8">
-          <Muted>GENERAL</Muted>
+          <Muted>Общи</Muted>
         </ListHeader>
         <ListItem
           itemLeft={(props) => <Star {...props} />} // props adds size and color attributes

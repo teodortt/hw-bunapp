@@ -61,9 +61,11 @@ export const Filters = () => {
 
   return (
     <ActionSheet
-      isModal={false}
+      isModal={true}
       safeAreaInsets={insets}
       snapPoints={[100]}
+      gestureEnabled={true}
+      openAnimationConfig={{ overshootClamping: true }}
       onBeforeClose={() => {
         router.setParams({ ...filters, searchQuery: query });
       }}
