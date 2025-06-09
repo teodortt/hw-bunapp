@@ -1,5 +1,4 @@
 import { List } from "@/lib/icons/List";
-import { Settings } from "@/lib/icons/Settings";
 import { Tabs } from "expo-router";
 import { Header } from "@/components/examples/components/header";
 import { UserCog2 } from "lucide-react-native";
