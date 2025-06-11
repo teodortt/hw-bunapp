@@ -14,7 +14,7 @@ import { useState } from "react";
 
 type FilterKey = "position" | "state";
 
-export const Filters = () => {
+export const FiltersSheet = () => {
   const offers: Offer[] = useSheetPayload("payload");
   const insets = useSafeAreaInsets();
   const ref = useSheetRef();
@@ -103,32 +103,6 @@ export const Filters = () => {
             <Text className="text-[#FFA001] font-bold">Затвори</Text>
           </TouchableOpacity>
         </View>
-
-        {/* search */}
-        <View className="flex-row items-center gap-6 space-x-4 w-full h-12 px-4 bg-black-200 rounded-2xl border-2 border-neutral-800 focus:border-secondary">
-          <TouchableOpacity onPress={() => ref.current.hide()}>
-            <ArrowLeft color="#CDCDE0" size={20} />
-          </TouchableOpacity>
-
-          <TextInput
-            className="text-start text-white flex-1 font-pregular"
-            value={query as string}
-            placeholder="Търсене"
-            placeholderTextColor="#CDCDE0"
-            onChangeText={(e) => setQuery(e)}
-            onSubmitEditing={() => {
-              router.setParams({ searchQuery: query });
-              ref.current.hide();
-            }}
-          />
-
-          {query && (
-            <TouchableOpacity onPress={handleClear}>
-              <XIcon color="#ff9f36" size={20} />
-            </TouchableOpacity>
-          )}
-        </View>
-        {/* search */}
 
         <View className="gap-4 pt-5 border-t-2 border-t-[#FFA001]">
           <View className="gap-2 items-start justify-start px-2">

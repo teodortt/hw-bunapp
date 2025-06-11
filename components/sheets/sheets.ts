@@ -1,11 +1,11 @@
 import { registerSheet, SheetDefinition } from "react-native-actions-sheet";
 import { TestSheet, TestSheet2 } from "./testSheet";
-import { Filters } from "./filters";
+import { FiltersSheet } from "./filtersSheet";
 import { Inquiry } from "./inquiry";
 
 registerSheet("testSheet", TestSheet);
 registerSheet("testSheet2", TestSheet2);
-registerSheet("filters", Filters);
+registerSheet("filters", FiltersSheet);
 registerSheet("inquiry", Inquiry);
 
 // We extend some of the types here to give us great intellisense

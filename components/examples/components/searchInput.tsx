@@ -12,6 +12,7 @@ export const SearchInput = ({ offers }: { offers: Offer[] }) => {
   const areFiltersEmpty = allKeysEmpty(params, [
     "searchQuery",
     "tempSearchQuery",
+    "showFavorites",
   ]);
 
   return (

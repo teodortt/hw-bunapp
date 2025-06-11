@@ -17,6 +17,7 @@ import { useLocalSearchParams } from "expo-router";
 import { Offer } from "@/components/examples/ApiTypes";
 import { OfferCard } from "@/components/offer/offer";
 import { useFavorites } from "@/lib/useFavorites";
+import { Filters } from "@/components/examples/components/Filters";
 
 const Offers = () => {
   const { data: offersData, loading, refetch } = useApi(getOffers);
@@ -106,7 +107,7 @@ const Offers = () => {
             </View>
 
             <View className="pb-4 px-1">
-              <SearchInput offers={offers || []} />
+              <Filters offers={offers || []} />
             </View>
           </View>
         )}
