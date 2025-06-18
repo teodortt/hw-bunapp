@@ -1,6 +1,6 @@
 import { View, TouchableOpacity, Text, Pressable } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { Filter, SearchIcon, SortAsc, XIcon } from "lucide-react-native";
+import { Filter, SortAsc, SortDesc } from "lucide-react-native";
 import { SheetManager } from "react-native-actions-sheet";
 import { allKeysEmpty } from "@/lib/utils";
 import { Offer } from "../ApiTypes";
@@ -19,7 +19,11 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
         }
       >
         <View className="space-x-2 px-4 py-2 shadow-sm border bg-blue-100 rounded-full flex-row items-center">
-          <SortAsc color="#ff9f36" size={20} />
+          {sort === "asc" ? (
+            <SortAsc color="#ff9f36" size={20} />
+          ) : (
+            <SortDesc color="#ff9f36" size={20} />
+          )}
           <Text className="text-blue-800 text-sm">Сортиране</Text>
         </View>
       </TouchableOpacity>
