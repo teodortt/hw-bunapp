@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 import { useEffect, useState } from "react";
-import { OfferDetails, OfferResponse } from "./ApiTypes";
+import { OfferDetails, OfferResponse, WATDataResponse } from "./ApiTypes";
 
 export const baseURL = "https://www.happyworld.bg/api/v2";
 const AUTHORIZATION_TOKEN = "2b2a404823e6e719ed3b6d1f5e33ce32b59cb809";
@@ -33,6 +33,38 @@ const useApi = <T>(fn: ApiFunction<T>) => {
 };
 
 export default useApi;
+
+async function getWATData(): Promise<WATDataResponse> {
+  try {
+    const response = await fetch(
+      `${baseURL}/workandtravel/35/?format=json&fields=*`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Token ${AUTHORIZATION_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error fetching WAT data:", { res: response });
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    console.log("Fetched WAT data:", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching WAT data:", error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+}
 
 export async function getOffers(): Promise<OfferResponse> {
   try {
@@ -83,7 +115,7 @@ export async function getOfferDetails(id: string): Promise<OfferDetails> {
 
     return data;
   } catch (error) {
-    console.error("Error fetching offers:", error);
+    console.error("Error fetching offer details:", error);
     if (error instanceof Error) {
       throw new Error(error.message);
     } else {

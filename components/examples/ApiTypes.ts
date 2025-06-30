@@ -104,3 +104,76 @@ export type OfferDetails = {
   housing_price_per_week: string;
   gallery_images: any[];
 };
+
+// /workandtravel/35/?format=json&fields=* (WATDataResponse)
+
+export type WATDataResponse = {
+  id: number;
+  meta: Meta;
+  title: string;
+  placement_options: PlacementOption[];
+  process_steps: ProcessStep[];
+  faq: FAQ[];
+};
+
+export type FAQ = {
+  type: string;
+  value: FAQValue;
+  id: string;
+};
+
+export type FAQValue = {
+  group_title: string;
+  items: Item[];
+};
+
+export type Item = {
+  question: string;
+  answer: string;
+};
+
+export type Meta = {
+  type: string;
+  detail_url: string;
+  html_url: string;
+  slug: string;
+  show_in_menus: boolean;
+  seo_title: string;
+  search_description: string;
+  first_published_at: Date;
+  alias_of: null;
+  parent: Parent;
+  locale: string;
+};
+
+export type Parent = {
+  id: number;
+  meta: ParentMeta;
+  title: string;
+};
+
+export type ParentMeta = {
+  type: string;
+  detail_url: string;
+  html_url: string;
+};
+
+export type PlacementOption = {
+  id: number;
+  name: string;
+  price: string;
+  description: string;
+};
+
+export type ProcessStep = {
+  type: string;
+  value: ProcessStepValue;
+  id: string;
+};
+
+export type ProcessStepValue = {
+  step_title: string;
+  description: string;
+};
+
+// End /workandtravel/35/?format=json&fields=* (WATDataResponse)
