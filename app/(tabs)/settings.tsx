@@ -7,10 +7,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { BookOpen, Shield, Star } from "@/lib/icons";
 import * as WebBrowser from "expo-web-browser";
 
-import { ThemeSettingItem } from "@/components/settings/ThemeItem";
-import { NotificationItem } from "@/components/settings/NotificationItem";
 import { SheetManager } from "react-native-actions-sheet";
-import { Heart, PenBox } from "lucide-react-native";
+import { BadgeDollarSign, FileQuestion, PenBox } from "lucide-react-native";
 import { router } from "expo-router";
 
 export default function Settings() {
@@ -25,20 +23,26 @@ export default function Settings() {
     <ScrollView className="flex-1 w-full px-6 bg-primary pt-4 gap-y-6">
       <List>
         <ListHeader>
-          <Muted>App</Muted>
+          <Muted>Work & Travel</Muted>
         </ListHeader>
 
         <ListItem
-          itemLeft={(props) => <PenBox color="white" />} // props adds size and color attributes
+          itemLeft={(props) => <PenBox color="white" />}
           label="Записване и документи"
           className="rounded-t-lg"
           onPress={() => router.push("/steps")}
         />
         <ListItem
-          itemLeft={(props) => <Heart color="white" />} // props adds size and color attributes
-          label="Любими"
+          itemLeft={(props) => <BadgeDollarSign color="white" />}
+          label="Цена на услугата"
           className="rounded-t-lg"
-          onPress={() => router.push("/")}
+          onPress={() => router.push("/cost")}
+        />
+        <ListItem
+          itemLeft={(props) => <FileQuestion color="white" />}
+          label="Често задавани въпроси"
+          className="rounded-t-lg"
+          onPress={() => router.push("/faq")}
         />
         {/* <ThemeSettingItem /> */}
         {/* {Platform.OS !== "web" && <NotificationItem />} */}

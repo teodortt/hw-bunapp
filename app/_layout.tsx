@@ -140,6 +140,24 @@ export default function RootLayout() {
                       header: () => <Header backButton />,
                     }}
                   />
+
+                  <Stack.Screen
+                    name="cost"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="faq"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
                 </Stack>
               </SheetProvider>
             </BottomSheetModalProvider>

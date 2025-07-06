@@ -2,12 +2,6 @@ import { View, Text, ScrollView } from "react-native";
 import useApi, { getWATData } from "../components/examples/useApi";
 import HTMLView from "react-native-htmlview";
 
-type Step =
-  | "Записване и документи"
-  | "Работна оферта"
-  | "Студентска виза"
-  | "Самолетен билет";
-
 const getTitleIcon = (step: string) => {
   switch (step) {
     case "Записване и документи":
