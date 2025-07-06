@@ -10,7 +10,7 @@ import * as WebBrowser from "expo-web-browser";
 import { ThemeSettingItem } from "@/components/settings/ThemeItem";
 import { NotificationItem } from "@/components/settings/NotificationItem";
 import { SheetManager } from "react-native-actions-sheet";
-import { Heart } from "lucide-react-native";
+import { Heart, PenBox } from "lucide-react-native";
 import { router } from "expo-router";
 
 export default function Settings() {
@@ -27,6 +27,13 @@ export default function Settings() {
         <ListHeader>
           <Muted>App</Muted>
         </ListHeader>
+
+        <ListItem
+          itemLeft={(props) => <PenBox color="white" />} // props adds size and color attributes
+          label="Записване и документи"
+          className="rounded-t-lg"
+          onPress={() => router.push("/steps")}
+        />
         <ListItem
           itemLeft={(props) => <Heart color="white" />} // props adds size and color attributes
           label="Любими"

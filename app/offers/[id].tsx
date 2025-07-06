@@ -122,7 +122,7 @@ export default function OfferDetailsScreen() {
           <Text className="text-gray-500 mb-1">Описание</Text>
 
           <HTMLView
-            value={offer.job_description || "<p>No description available.</p>"}
+            value={offer.job_description || "<p>Няма описание.</p>"}
             stylesheet={{
               p: { color: "#fff", fontSize: 16 },
               a: { color: "#fff", fontSize: 16 },

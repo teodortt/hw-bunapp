@@ -131,6 +131,15 @@ export default function RootLayout() {
                       header: () => <Header backButton />,
                     }}
                   />
+
+                  <Stack.Screen
+                    name="steps"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
                 </Stack>
               </SheetProvider>
             </BottomSheetModalProvider>

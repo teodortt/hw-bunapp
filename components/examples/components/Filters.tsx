@@ -18,13 +18,13 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
           // TODO: ADD SORTING SHEET
         }
       >
-        <View className="space-x-2 px-4 py-2 shadow-sm border bg-blue-100 rounded-full flex-row items-center">
+        <View className="space-x-2 px-4 py-2 shadow-sm border bg-white/20 rounded-full flex-row items-center">
           {sort === "asc" ? (
             <SortAsc color="#ff9f36" size={20} />
           ) : (
             <SortDesc color="#ff9f36" size={20} />
           )}
-          <Text className="text-blue-800 text-sm">Сортиране</Text>
+          <Text className="text-white text-sm">Сортиране</Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity
@@ -34,9 +34,9 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
           });
         }}
       >
-        <View className="space-x-2 px-4 py-2 shadow-sm border bg-blue-100 rounded-full flex-row items-center">
+        <View className="space-x-2 px-4 py-2 shadow-sm border bg-white/20 rounded-full flex-row items-center">
           <Filter color={areFiltersEmpty ? "#ff9f36" : "#ff9f36"} size={20} />
-          <Text className="text-blue-800 text-sm">Филтриране</Text>
+          <Text className="text-white text-sm">Филтриране</Text>
         </View>
       </TouchableOpacity>
     </View>

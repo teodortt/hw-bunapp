@@ -34,7 +34,7 @@ const useApi = <T>(fn: ApiFunction<T>) => {
 
 export default useApi;
 
-async function getWATData(): Promise<WATDataResponse> {
+export async function getWATData(): Promise<WATDataResponse> {
   try {
     const response = await fetch(
       `${baseURL}/workandtravel/35/?format=json&fields=*`,
