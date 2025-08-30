@@ -75,7 +75,8 @@ export default function Settings() {
         <ListItem
           itemLeft={(props) => <BookOpen {...props} />}
           label="Общи условия"
-          onPress={() => openExternalURL("https://expostarter.com")}
+          onPress={() => router.push("/policy")}
+          // onPress={() => openExternalURL("https://www.happyworld.bg/terms/")}
         />
         {/* <ListItem
           itemLeft={(props) => <Shield {...props} />}

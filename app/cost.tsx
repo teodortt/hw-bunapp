@@ -81,7 +81,7 @@ const Cost = () => {
                 </Text>
               </View>
               <View className="bg-orange-500 rounded-full px-3 py-1 self-start">
-                <Text className="text-white text-sm font-medium">
+                <Text className="text-white text-sm font-bold">
                   ${step.price}
                 </Text>
               </View>

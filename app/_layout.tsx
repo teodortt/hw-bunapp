@@ -158,6 +158,15 @@ export default function RootLayout() {
                       header: () => <Header backButton />,
                     }}
                   />
+
+                  <Stack.Screen
+                    name="policy"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
                 </Stack>
               </SheetProvider>
             </BottomSheetModalProvider>
