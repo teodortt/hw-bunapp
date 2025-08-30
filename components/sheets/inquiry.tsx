@@ -221,7 +221,7 @@ export const Inquiry = () => {
           } text-black`}
           placeholder="Телефон*"
           placeholderTextColor="#999"
-          keyboardType="phone-pad"
+          // keyboardType="phone-pad"
           value={values.phone}
           onChangeText={(t) => setField("phone", t)}
           onBlur={() => onBlur("phone")}
@@ -242,7 +242,7 @@ export const Inquiry = () => {
           } text-black`}
           placeholder="Email"
           placeholderTextColor="#999"
-          keyboardType="email-address"
+          // keyboardType="email-address"
           autoCapitalize="none"
           value={values.email}
           onChangeText={(t) => setField("email", t)}
