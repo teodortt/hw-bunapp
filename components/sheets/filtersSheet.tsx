@@ -67,7 +67,7 @@ export const FiltersSheet = () => {
 
   const handleClear = () => {
     setQuery("");
-    router.setParams({ position: "", state: "", searchQuery: "" });
+    router.setParams({ position: "", state: "", searchQuery: "", sort: "" });
   };
 
   return (
@@ -157,7 +157,7 @@ export const FiltersSheet = () => {
           </View>
           <View className=" gap-2 items-start justify-start px-2">
             <View className="w-full flex-row justify-between border-b-2 border-b-slate-800 pb-2">
-              <Text>Щат</Text>
+              <Text className="font-bold">Щат</Text>
               <TouchableOpacity
                 onPress={() => setFilters((prev) => ({ ...prev, state: "" }))}
                 className={"rounded-md bg-primary"}

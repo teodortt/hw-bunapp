@@ -24,7 +24,9 @@ export const Filters = ({ offers }: { offers: Offer[] }) => {
           ) : (
             <SortDesc color="#ff9f36" size={20} />
           )}
-          <Text className="text-white text-sm">Сортиране</Text>
+          <Text className="text-white text-sm">
+            Сортиране {sort === "asc" ? "A-z" : "Z-a"}
+          </Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity

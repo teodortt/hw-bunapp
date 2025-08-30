@@ -22,41 +22,52 @@ import { Filters } from "@/components/examples/components/Filters";
 const Offers = () => {
   const { data: offersData, loading, refetch } = useApi(getOffers);
   const { favorites } = useFavorites();
-  const { searchQuery, position, state, showFavorites } =
+  const { searchQuery, position, state, sort, showFavorites } =
     useLocalSearchParams();
   const filter = typeof searchQuery === "string" ? searchQuery : "";
   const showFav = showFavorites == "true";
 
   const offers = offersData?.results;
 
-  const filteredOffers = offers?.filter((offer) =>
-    Object.values(offer).some((value) => {
-      const isSearchMatch = filter
-        ? String(value).toLowerCase().includes(filter.toLowerCase())
-        : true;
-
-      const isPositionMatch =
-        Array.isArray(position) && position.length
-          ? position.some(
-              (p) => p.toLowerCase() === offer.position.trim().toLowerCase()
-            )
+  const filteredOffers = offers
+    ?.filter((offer) =>
+      Object.values(offer).some((value) => {
+        const isSearchMatch = filter
+          ? String(value).toLowerCase().includes(filter.toLowerCase())
           : true;
 
-      const isStateMatch =
-        Array.isArray(state) && state.length
-          ? state.some(
-              (s) => s.toLowerCase() === offer.state.trim().toLowerCase()
-            )
-          : true;
+        const isPositionMatch =
+          Array.isArray(position) && position.length
+            ? position.some(
+                (p) => p.toLowerCase() === offer.position.trim().toLowerCase()
+              )
+            : true;
 
-      const isFavoriteMatch =
-        !showFav || favorites.includes(offer.id.toString());
+        const isStateMatch =
+          Array.isArray(state) && state.length
+            ? state.some(
+                (s) => s.toLowerCase() === offer.state.trim().toLowerCase()
+              )
+            : true;
 
-      return (
-        isSearchMatch && isPositionMatch && isStateMatch && isFavoriteMatch
-      );
-    })
-  );
+        const isFavoriteMatch =
+          !showFav || favorites.includes(offer.id.toString());
+
+        return (
+          isSearchMatch && isPositionMatch && isStateMatch && isFavoriteMatch
+        );
+      })
+    )
+    ?.sort((a, b) => {
+      if (!sort) return 0;
+      const direction = sort === "asc" ? 1 : -1;
+      const fieldA = a.title.toLowerCase();
+      const fieldB = b.title.toLowerCase();
+
+      if (fieldA < fieldB) return -1 * direction;
+      if (fieldA > fieldB) return 1 * direction;
+      return 0;
+    });
 
   if (!offers && loading) {
     return (
