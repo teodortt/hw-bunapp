@@ -66,12 +66,12 @@ export default function Settings() {
         <ListHeader className="pt-8">
           <Muted>Общи</Muted>
         </ListHeader>
-        <ListItem
+        {/* <ListItem
           itemLeft={(props) => <Star {...props} />} // props adds size and color attributes
           label="Оценете приложението"
           className="rounded-t-lg"
           onPress={() => openStoreReview()}
-        />
+        /> */}
         <ListItem
           itemLeft={(props) => <BookOpen {...props} />}
           label="Общи условия"
