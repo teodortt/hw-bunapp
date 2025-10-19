@@ -76,7 +76,7 @@ export default function OfferDetailsScreen() {
         {offer?.image && (
           <Image
             source={{
-              uri: `https://www.happyworld.bg${offer.image.meta.download_url}`,
+              uri: offer.image.full_url,
             }}
             className="w-full h-48 rounded-2xl mb-4"
             resizeMode="cover"

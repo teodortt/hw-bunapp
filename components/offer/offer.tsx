@@ -33,7 +33,7 @@ export const OfferCard = ({ item }: { item: Offer }) => {
         <View className="flex-row mb-4 mx-2 bg-gray-800 border-none rounded-lg overflow-hidden">
           <Image
             source={{
-              uri: `https://www.happyworld.bg${item.image.meta.download_url}`,
+              uri: item.image.full_url,
             }}
             className="w-36 h-36"
           />

@@ -1,4 +1,4 @@
-export type Offer = {
+export interface Offer {
   id: number;
   meta: {
     type: string;
@@ -13,15 +13,8 @@ export type Offer = {
     locale: string;
   };
   title: string;
-  image: {
-    id: number;
-    meta: {
-      type: string;
-      detail_url: string;
-      download_url: string;
-    };
-    title: string;
-  };
+  image: Image;
+  thumbnail: Image;
   position: string;
   employer: string;
   city: string;
@@ -42,7 +35,15 @@ export type Offer = {
   housing_available: boolean;
   housing_price_per_week: string;
   gallery_images: any[];
-};
+}
+
+export interface Image {
+  full_url: string;
+  width: number;
+  height: number;
+  alt: string;
+  src: string;
+}
 
 export type OfferResponse = {
   count: number;
@@ -53,36 +54,10 @@ export type OfferResponse = {
 
 export type OfferDetails = {
   id: number;
-  meta: {
-    type: string;
-    detail_url: string;
-    html_url: string;
-    slug: string;
-    show_in_menus: boolean;
-    seo_title: string;
-    search_description: string;
-    first_published_at: Date;
-    alias_of: any;
-    parent: {
-      id: number;
-      meta: {
-        type: string;
-        detail_url: string;
-        html_url: string;
-      };
-      title: string;
-    };
-  };
+  meta: Meta;
   title: string;
-  image: {
-    id: number;
-    meta: {
-      type: string;
-      detail_url: string;
-      download_url: string;
-    };
-    title: string;
-  };
+  image: Image;
+  thumbnail: Image;
   position: string;
   employer: string;
   city: string;
