@@ -1,4 +1,12 @@
 {
   "name": "bunapp",
-  "slug": "bunapp"
+  "slug": "bunapp",
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.happyworld.base",
+    "icon": "./assets/AppIcons/appstore.png",
+    "infoPlist": {
+      "ITSAppUsesNonExemptEncryption": false
+    }
+  }
 }
