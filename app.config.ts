@@ -3,7 +3,7 @@ import type { ConfigContext, ExpoConfig } from "@expo/config";
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "HappyWorld",
-  slug: "expostarter",
+  slug: "HappyWorld",
   newArchEnabled: true,
   version: "1.0.0",
   orientation: "portrait",
@@ -21,7 +21,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.expostarter.base",
+    bundleIdentifier: "com.happyworld.base",
     icon: "./assets/AppIcons/appstore.png",
   },
   android: {
@@ -29,7 +29,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: "./assets/AppIcons/square.png",
       backgroundColor: "#ffffff",
     },
-    package: "com.expostarter.base",
+    package: "com.happyworld.base",
   },
   web: {
     bundler: "metro",
@@ -43,8 +43,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     eas: {
-      projectId: "",
+      projectId: "26e20f8d-693e-4a93-bf3d-f1b5d8b1c10c",
     },
   },
-  owner: "*",
+  owner: "enzzure",
 });
