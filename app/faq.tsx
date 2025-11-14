@@ -1,4 +1,4 @@
-import useApi, { getWATData } from "@/components/examples/useApi";
+import useApi, { getWATData } from "@/components/shared/useApi";
 import { useState } from "react";
 import {
   View,

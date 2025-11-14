@@ -7,17 +7,17 @@ import {
   RefreshControl,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { EmptyState } from "../../components/examples/components";
-import { images } from "../../components/examples/constants";
-import useApi, { getOffers } from "../../components/examples/useApi";
-import { SearchInput } from "@/components/examples/components/searchInput";
+import { EmptyState } from "../../components/shared/components";
+import { images } from "../../components/shared/constants";
+import useApi, { getOffers } from "../../components/shared/useApi";
+import { SearchInput } from "@/components/shared/components/searchInput";
 import { FlashList } from "@shopify/flash-list";
 import { useLocalSearchParams } from "expo-router";
 
-import { Offer } from "@/components/examples/ApiTypes";
+import { Offer } from "@/components/shared/ApiTypes";
 import { OfferCard } from "@/components/offer/offer";
 import { useFavorites } from "@/lib/useFavorites";
-import { Filters } from "@/components/examples/components/Filters";
+import { Filters } from "@/components/shared/components/Filters";
 
 const Offers = () => {
   const { data: offersData, loading, refetch } = useApi(getOffers);

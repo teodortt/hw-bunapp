@@ -4,7 +4,7 @@ import { Link } from "expo-router";
 import { HeartIcon } from "lucide-react-native";
 
 import { useFavorites } from "@/lib/useFavorites";
-import { Offer } from "@/components/examples/ApiTypes";
+import { Offer } from "@/components/shared/ApiTypes";
 import { cn } from "@/lib/utils";
 
 export const OfferCard = ({ item }: { item: Offer }) => {

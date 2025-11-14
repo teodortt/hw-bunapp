@@ -9,7 +9,7 @@ import ActionSheet, {
   useSheetRef,
 } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Offer } from "../examples/ApiTypes";
+import { Offer } from "../shared/ApiTypes";
 import { useState } from "react";
 
 type FilterKey = "position" | "state";

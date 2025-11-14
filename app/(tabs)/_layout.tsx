@@ -1,6 +1,6 @@
 import { List } from "@/lib/icons/List";
 import { Tabs } from "expo-router";
-import { Header } from "@/components/examples/components/header";
+import { Header } from "@/components/shared/components/header";
 import { UserCog2 } from "lucide-react-native";
 export const unstable_settings = {
   initialRouteName: "index",

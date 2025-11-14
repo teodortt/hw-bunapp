@@ -9,7 +9,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Text } from "@/components/ui/text";
-import useApi, { getOfferDetails } from "@/components/examples/useApi";
+import useApi, { getOfferDetails } from "@/components/shared/useApi";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFavorites } from "@/lib/useFavorites";
 import { HeartIcon, MessageCircle } from "lucide-react-native";

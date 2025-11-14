@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import useApi, { getWATData } from "../components/examples/useApi";
+import useApi, { getWATData } from "../components/shared/useApi";
 import HTMLView from "react-native-htmlview";
 
 const Cost = () => {

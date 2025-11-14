@@ -14,7 +14,7 @@ import { getItem, setItem } from "@/lib/storage";
 import { Platform } from "react-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import "../components/sheets/sheets";
-import { Header } from "@/components/examples/components/header";
+import { Header } from "@/components/shared/components/header";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
