@@ -14,7 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFavorites } from "@/lib/useFavorites";
 import { HeartIcon, MessageCircle } from "lucide-react-native";
 import { SheetManager } from "react-native-actions-sheet";
-import HTMLView from "react-native-htmlview";
+import HTMLView from "react-native-render-html";
 
 export default function OfferDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -122,8 +122,8 @@ export default function OfferDetailsScreen() {
           <Text className="text-gray-500 mb-1">Описание</Text>
 
           <HTMLView
-            value={offer.job_description || "<p>Няма описание.</p>"}
-            stylesheet={{
+            source={{ html: offer.job_description || "<p>Няма описание.</p>" }}
+            tagsStyles={{
               p: { color: "#fff", fontSize: 16 },
               a: { color: "#fff", fontSize: 16 },
               strong: { color: "#fff", fontSize: 16 },

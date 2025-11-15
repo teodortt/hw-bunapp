@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import useApi, { getWATData } from "../components/shared/useApi";
-import HTMLView from "react-native-htmlview";
+import HTMLView from "react-native-render-html";
 
 const Cost = () => {
   const { data: steps } = useApi(getWATData);
@@ -30,8 +30,10 @@ const Cost = () => {
                 </Text>
                 <Text className="text-sm text-gray-300 leading-relaxed">
                   <HTMLView
-                    value={step.description || "<p>Няма описание.</p>"}
-                    stylesheet={{
+                    source={{
+                      html: step.description || "<p>Няма описание.</p>",
+                    }}
+                    tagsStyles={{
                       p: { color: "#d1d5db", fontSize: 16 },
                       a: { color: "#d1d5db", fontSize: 16 },
                       strong: { color: "#d1d5db", fontSize: 16 },

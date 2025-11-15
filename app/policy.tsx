@@ -1,5 +1,4 @@
 import { View, Text, ScrollView } from "react-native";
-import HTMLView from "react-native-htmlview";
 
 const Policy = () => {
   return (

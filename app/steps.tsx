@@ -1,6 +1,6 @@
 import { View, Text, ScrollView } from "react-native";
 import useApi, { getWATData } from "../components/shared/useApi";
-import HTMLView from "react-native-htmlview";
+import HTMLView from "react-native-render-html";
 
 const getTitleIcon = (step: string) => {
   switch (step) {
@@ -43,8 +43,10 @@ const Steps = () => {
             </Text>
             <Text className="text-base text-gray-300 whitespace-pre-line">
               <HTMLView
-                value={step.value.description || "<p>Няма описание.</p>"}
-                stylesheet={{
+                source={{
+                  html: step.value.description || "<p>Няма описание.</p>",
+                }}
+                tagsStyles={{
                   p: { color: "#d1d5db", fontSize: 16 },
                   a: { color: "#d1d5db", fontSize: 16 },
                   strong: { color: "#d1d5db", fontSize: 16 },

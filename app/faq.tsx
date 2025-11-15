@@ -9,7 +9,7 @@ import {
   UIManager,
   ScrollView,
 } from "react-native";
-import HTMLView from "react-native-htmlview";
+import HTMLView from "react-native-render-html";
 
 // Enable LayoutAnimation on Android
 if (Platform.OS === "android") {
@@ -69,8 +69,8 @@ const Faq = () => {
                     <View className="px-4 pb-4">
                       <Text className="text-gray-300 text-sm leading-relaxed">
                         <HTMLView
-                          value={item.answer}
-                          stylesheet={{
+                          source={{ html: item.answer }}
+                          tagsStyles={{
                             p: { color: "#d1d5db", fontSize: 16 },
                             a: { color: "#d1d5db", fontSize: 16 },
                             strong: { color: "#d1d5db", fontSize: 16 },

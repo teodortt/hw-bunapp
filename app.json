@@ -8,5 +8,10 @@
     "infoPlist": {
       "ITSAppUsesNonExemptEncryption": false
     }
+  },
+  "android": {
+    "package": "com.happyworld.base",
+    "versionCode": 16,
+    "icon": "./assets/AppIcons/playstore.png"
   }
 }
