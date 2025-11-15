@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "175440630425",
+    "project_id": "hw-notifications-232c1",
+    "storage_bucket": "hw-notifications-232c1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175440630425:android:5e214ff081668c5e519e08",
+        "android_client_info": {
+          "package_name": "com.happyword.base"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiPG4la8OYrlJeFd-9hP86jbUhcx-9yqw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
