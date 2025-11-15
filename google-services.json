@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:175440630425:android:5e214ff081668c5e519e08",
+        "mobilesdk_app_id": "1:175440630425:android:a1023657fd418281519e08",
         "android_client_info": {
-          "package_name": "com.happyword.base"
+          "package_name": "com.happyworld.base"
         }
       },
       "oauth_client": [],
