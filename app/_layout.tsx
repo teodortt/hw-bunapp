@@ -17,6 +17,7 @@ import "../components/sheets/sheets";
 import { Header } from "@/components/shared/components/header";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
@@ -135,11 +136,22 @@ async function registerForPushNotificationsAsync() {
     }
 
     try {
-      const pushTokenString = (await Notifications.getExpoPushTokenAsync())
-        .data;
-      console.log(pushTokenString);
+      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+
+      if (!projectId) {
+        throw new Error("Project ID not found in app config");
+      }
+
+      const pushTokenString = (
+        await Notifications.getExpoPushTokenAsync({
+          projectId,
+        })
+      ).data;
+
+      console.log("✅ Push token:", pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
+      console.error("❌ Push token error:", e);
       handleRegistrationError(`${e}`);
     }
   } else {
