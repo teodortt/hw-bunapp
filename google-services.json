@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "175440630425",
-    "project_id": "hw-notifications-232c1",
-    "storage_bucket": "hw-notifications-232c1.firebasestorage.app"
+    "project_number": "845137984862",
+    "project_id": "hw-new-9d3da",
+    "storage_bucket": "hw-new-9d3da.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:175440630425:android:a1023657fd418281519e08",
+        "mobilesdk_app_id": "1:845137984862:android:974f61d8dbac781b7c23cf",
         "android_client_info": {
           "package_name": "com.happyworld.base"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDiPG4la8OYrlJeFd-9hP86jbUhcx-9yqw"
+          "current_key": "AIzaSyBFfH2vFX1fYgJaTUT1UmkTHIwY6AbP9cg"
         }
       ],
       "services": {
