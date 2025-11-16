@@ -135,7 +135,7 @@ async function registerForPushNotificationsAsync() {
     }
 
     try {
-      const pushTokenString = (await Notifications.getExpoPushTokenAsync({}))
+      const pushTokenString = (await Notifications.getExpoPushTokenAsync())
         .data;
       console.log(pushTokenString);
       return pushTokenString;
