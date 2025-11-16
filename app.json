@@ -12,6 +12,7 @@
   "android": {
     "package": "com.happyworld.base",
     "versionCode": 41,
-    "icon": "./assets/AppIcons/playstore.png"
+    "icon": "./assets/AppIcons/playstore.png",
+    "googleServicesFile": "./google-services.json"
   }
 }
