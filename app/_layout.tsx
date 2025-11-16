@@ -149,7 +149,7 @@ async function registerForPushNotificationsAsync() {
 
       const pushTokenString = (
         await Notifications.getExpoPushTokenAsync({
-          projectId,
+          projectId: "26e20f8d-693e-4a93-bf3d-f1b5d8b1c10c",
         })
       ).data;
 
