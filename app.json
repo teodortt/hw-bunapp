@@ -11,7 +11,7 @@
   },
   "android": {
     "package": "com.happyworld.base",
-    "versionCode": 16,
+    "versionCode": 41,
     "icon": "./assets/AppIcons/playstore.png"
   }
 }

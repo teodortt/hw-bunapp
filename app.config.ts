@@ -33,7 +33,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     package: "com.happyworld.base",
-    googleServicesFile: "./google-services.json",
+    versionCode: 41,
   },
   web: {
     bundler: "metro",
