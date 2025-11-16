@@ -136,6 +136,11 @@ async function registerForPushNotificationsAsync() {
     }
 
     try {
+      console.log("🔑 Getting FCM device token...");
+      const deviceToken = await Notifications.getDevicePushTokenAsync();
+      console.log("✅ FCM Token:", deviceToken.data);
+
+      console.log("🔑 Getting Expo push token...");
       const projectId = Constants.expoConfig?.extra?.eas?.projectId;
 
       if (!projectId) {
@@ -148,10 +153,13 @@ async function registerForPushNotificationsAsync() {
         })
       ).data;
 
-      console.log("✅ Push token:", pushTokenString);
+      console.log("✅ Expo Push Token:", pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
-      console.error("❌ Push token error:", e);
+      console.error("❌ Error details:", e);
+      if (e instanceof Error) {
+        console.error("Error message:", e.message);
+      }
       handleRegistrationError(`${e}`);
     }
   } else {
