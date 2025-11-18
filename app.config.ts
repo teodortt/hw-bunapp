@@ -41,7 +41,21 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     output: "single",
     favicon: "./assets/AppIcons/favicon.png",
   },
-  plugins: [["expo-router"], ["expo-sqlite"], "expo-notifications"],
+  plugins: [
+    ["expo-router"],
+    ["expo-sqlite"],
+    [
+      "expo-build-properties",
+      {
+        android: {
+          compileSdkVersion: 35,
+          targetSdkVersion: 35,
+          buildToolsVersion: "35.0.0",
+        },
+      },
+    ],
+    "expo-notifications",
+  ],
   experiments: {
     typedRoutes: true,
     baseUrl: "/expo-local-first-template",
