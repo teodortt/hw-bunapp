@@ -26,12 +26,12 @@ const Cost = () => {
             <View className="flex-row items-start justify-between mb-4">
               <View className="flex-1 pr-4">
                 <Text className="text-lg font-semibold text-white mb-1">
-                  {step.name}
+                  {step.title}
                 </Text>
                 <Text className="text-sm text-gray-300 leading-relaxed">
                   <HTMLView
                     source={{
-                      html: step.description || "<p>Няма описание.</p>",
+                      html: step.subtitle || "<p>Няма описание.</p>",
                     }}
                     tagsStyles={{
                       p: { color: "#d1d5db", fontSize: 16 },

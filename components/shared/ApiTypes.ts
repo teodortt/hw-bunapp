@@ -88,13 +88,12 @@ export type WATDataResponse = {
   title: string;
   placement_options: PlacementOption[];
   process_steps: ProcessStep[];
-  faq: FAQ[];
+  faqs: FAQ[];
 };
 
 export type FAQ = {
-  type: string;
-  value: FAQValue;
-  id: string;
+  title: string;
+  description: string;
 };
 
 export type FAQValue = {
@@ -135,9 +134,10 @@ export type ParentMeta = {
 
 export type PlacementOption = {
   id: number;
-  name: string;
+  title: string;
+  subtitle: string;
   price: string;
-  description: string;
+  final_price: string;
 };
 
 export type ProcessStep = {

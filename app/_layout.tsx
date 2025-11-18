@@ -202,7 +202,7 @@ export default function RootLayout() {
                     }}
                   />
                   <Stack.Screen
-                    name="test"
+                    name="notifications"
                     options={{
                       headerShadowVisible: false,
                       headerBackTitle: "Назад",
