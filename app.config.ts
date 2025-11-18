@@ -10,9 +10,10 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   icon: "./assets/AppIcons/square.png",
   scheme: "ltstarter",
   userInterfaceStyle: "dark",
-  runtimeVersion: {
-    policy: "appVersion",
-  },
+  // runtimeVersion: {
+  //   policy: "appVersion",
+  // },
+  runtimeVersion: "1.0.1",
   splash: {
     image: "./assets/AppIcons/splash.png",
     resizeMode: "contain",
@@ -33,7 +34,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: "#ffffff",
     },
     package: "com.happyworld.base",
-    versionCode: 41,
     googleServicesFile: "./google-services.json",
   },
   web: {

@@ -46,6 +46,7 @@
     "drizzle-orm": "0.38.4",
     "drizzle-zod": "^0.5.1",
     "expo": "~52.0.47",
+    "expo-application": "~6.0.2",
     "expo-build-properties": "~0.13.3",
     "expo-clipboard": "~7.0.1",
     "expo-constants": "~17.0.8",

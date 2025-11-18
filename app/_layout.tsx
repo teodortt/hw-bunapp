@@ -15,9 +15,8 @@ import { Platform } from "react-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import "../components/sheets/sheets";
 import { Header } from "@/components/shared/components/header";
-import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import Constants from "expo-constants";
+import { registerForPushNotificationsAsync } from "@/lib/registerForPushNotifications";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
@@ -85,107 +84,20 @@ Notifications.setNotificationHandler({
   }),
 });
 
-async function sendPushNotification(expoPushToken: string) {
-  const message = {
-    to: expoPushToken,
-    sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
-    data: { someData: "goes here" },
-  };
-
-  await fetch("https://exp.host/--/api/v2/push/send", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Accept-encoding": "gzip, deflate",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(message),
-  });
-}
-
-function handleRegistrationError(errorMessage: string) {
-  alert(errorMessage);
-  throw new Error(errorMessage);
-}
-
-async function registerForPushNotificationsAsync() {
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
-      );
-      return;
-    }
-
-    try {
-      console.log("🔑 Getting FCM device token...");
-      const deviceToken = await Notifications.getDevicePushTokenAsync();
-      console.log("✅ FCM Token:", deviceToken.data);
-
-      console.log("🔑 Getting Expo push token...");
-      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-
-      if (!projectId) {
-        throw new Error("Project ID not found in app config");
-      }
-
-      const pushTokenString = (
-        await Notifications.getExpoPushTokenAsync({
-          projectId: "26e20f8d-693e-4a93-bf3d-f1b5d8b1c10c",
-        })
-      ).data;
-
-      console.log("✅ Expo Push Token:", pushTokenString);
-      return pushTokenString;
-    } catch (e: unknown) {
-      console.error("❌ Error details:", e);
-      if (e instanceof Error) {
-        console.error("Error message:", e.message);
-      }
-      handleRegistrationError(`${e}`);
-    }
-  } else {
-    handleRegistrationError("Must use physical device for push notifications");
-  }
-}
-
 export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
-  const [expoPushToken, setExpoPushToken] = React.useState("");
-  const [notification, setNotification] = React.useState<
-    Notifications.Notification | undefined
-  >(undefined);
 
   React.useEffect(() => {
     registerForPushNotificationsAsync()
       .then((token) => {
         console.log({ token });
-        setExpoPushToken(token ?? "");
       })
-      .catch((error: any) => setExpoPushToken(`${error}`));
+      .catch((error: any) => console.log(error));
 
     const notificationListener = Notifications.addNotificationReceivedListener(
       (notification) => {
-        setNotification(notification);
+        console.log(notification);
       }
     );
 
@@ -283,6 +195,14 @@ export default function RootLayout() {
 
                   <Stack.Screen
                     name="policy"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="test"
                     options={{
                       headerShadowVisible: false,
                       headerBackTitle: "Назад",

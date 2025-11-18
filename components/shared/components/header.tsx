@@ -3,13 +3,7 @@ import * as Clipboard from "expo-clipboard";
 import { images } from "../constants";
 import { useNavigation } from "expo-router";
 
-export const Header = ({
-  backButton,
-  text,
-}: {
-  backButton?: boolean;
-  text?: string;
-}) => {
+export const Header = ({ backButton }: { backButton?: boolean }) => {
   const navigation = useNavigation();
 
   return (
@@ -35,21 +29,14 @@ export const Header = ({
           >{`< Назад`}</Text>
         )}
       </View>
-      <Pressable
-        onPress={() => {
-          Clipboard.setStringAsync(text || "");
-          Alert.alert("key", text);
+      <Image
+        source={images.logo}
+        style={{
+          width: 100,
+          height: 40,
+          resizeMode: "contain",
         }}
-      >
-        <Image
-          source={images.logo}
-          style={{
-            width: 100,
-            height: 40,
-            resizeMode: "contain",
-          }}
-        />
-      </Pressable>
+      />
     </View>
   );
 };

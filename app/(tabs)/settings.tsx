@@ -61,6 +61,12 @@ export default function Settings() {
           className="rounded-t-lg"
           onPress={() => router.push("/faq")}
         />
+        <ListItem
+          itemLeft={(props) => <FileQuestion color="white" />}
+          label="Нотификации"
+          className="rounded-t-lg"
+          onPress={() => router.push("/test")}
+        />
         {/* <ThemeSettingItem /> */}
         {/* {Platform.OS !== "web" && <NotificationItem />} */}
         <ListHeader className="pt-8">
