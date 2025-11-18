@@ -1,32 +1,77 @@
 import React from "react";
-import { View, Text, Switch } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import * as Notifications from "expo-notifications";
 import { MMKV } from "react-native-mmkv";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  interpolateColor,
+} from "react-native-reanimated";
 
 const storage = new MMKV();
 
 function NotificationSettings() {
-  const [isEnabled, setIsEnabled] = React.useState(
-    storage.getBoolean("notifications") ?? false
-  );
+  const [isEnabled, setIsEnabled] = React.useState(false);
+  const animatedValue = useSharedValue(0);
 
-  const toggle = async (value: boolean) => {
-    setIsEnabled(value);
+  // Check actual device permission status on mount
+  React.useEffect(() => {
+    checkPermissionStatus();
+  }, []);
 
-    if (value) {
+  const checkPermissionStatus = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    const hasPermission = status === "granted";
+    setIsEnabled(hasPermission);
+    storage.set("notifications", hasPermission);
+    animatedValue.value = hasPermission ? 1 : 0;
+  };
+
+  const toggle = async () => {
+    const newValue = !isEnabled;
+
+    if (newValue) {
+      // Request permission - shows system dialog
       const { status } = await Notifications.requestPermissionsAsync();
 
-      if (status !== "granted") {
+      if (status === "granted") {
+        setIsEnabled(true);
+        storage.set("notifications", true);
+        animatedValue.value = withTiming(1, { duration: 300 });
+      } else {
         setIsEnabled(false);
         storage.set("notifications", false);
-        return;
+        animatedValue.value = withTiming(0, { duration: 300 });
       }
-
-      storage.set("notifications", true);
     } else {
+      setIsEnabled(false);
       storage.set("notifications", false);
+      animatedValue.value = withTiming(0, { duration: 300 });
     }
   };
+
+  // Animated track (background)
+  const trackStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      animatedValue.value,
+      [0, 1],
+      ["#5e7eb8", "#fb923c"]
+    );
+
+    return {
+      backgroundColor,
+    };
+  });
+
+  // Animated thumb (circle)
+  const thumbStyle = useAnimatedStyle(() => {
+    const translateX = animatedValue.value * 24; // Move 24px when enabled
+
+    return {
+      transform: [{ translateX: withTiming(translateX, { duration: 300 }) }],
+    };
+  });
 
   return (
     <View className="flex-1 bg-primary">
@@ -34,12 +79,18 @@ function NotificationSettings() {
         <Text className="text-base font-medium text-gray-900 dark:text-white">
           Push Notifications
         </Text>
-        <Switch
-          value={isEnabled}
-          onValueChange={toggle}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor={isEnabled ? "#007AFF" : "#f4f3f4"}
-        />
+
+        <Pressable onPress={toggle}>
+          <Animated.View
+            style={[trackStyle]}
+            className="w-14 h-8 rounded-full p-1 justify-center"
+          >
+            <Animated.View
+              style={[thumbStyle]}
+              className="w-6 h-6 bg-white rounded-full shadow-lg"
+            />
+          </Animated.View>
+        </Pressable>
       </View>
     </View>
   );
