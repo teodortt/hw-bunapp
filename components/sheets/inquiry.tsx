@@ -20,7 +20,7 @@ type FormState = {
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-const ENDPOINT = `${baseURL}/api/v2/contact/`;
+const ENDPOINT = `${baseURL}/contact/`;
 
 const sanitizePhone = (input: string) => {
   const trimmed = input.trim();
@@ -58,7 +58,9 @@ const validate = (values: FormState): FormErrors => {
 
   // Email: required and must be valid
   const email = values.email.trim();
-  if (email) {
+  if (!email) {
+    errors.email = "Моля, въведете email адрес.";
+  } else if (email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!emailRegex.test(email)) {
       errors.email = "Моля, въведете валиден имейл адрес.";
