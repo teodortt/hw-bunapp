@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { OfferDetails, OfferResponse, WATDataResponse } from "./ApiTypes";
 
 export const baseURL = "https://www.happyworld.bg/api/v2";
-const AUTHORIZATION_TOKEN = "2b2a404823e6e719ed3b6d1f5e33ce32b59cb809";
+export const AUTHORIZATION_TOKEN = "2b2a404823e6e719ed3b6d1f5e33ce32b59cb809";
 
 type ApiFunction<T> = () => Promise<T>;
 

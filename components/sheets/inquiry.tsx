@@ -9,21 +9,20 @@ import {
 } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AUTHORIZATION_TOKEN, baseURL } from "../shared/useApi";
 
 type FormState = {
   name: string;
+  university: string;
   phone: string;
   email: string;
-  inquiry: string;
 };
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
 
-const ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbxyaAPnes5OwpLOD2z1xZNstxHP6Jg2WXJl07o6299dhqFw5AZJGItQbCPPYgvjrdGv/exec";
+const ENDPOINT = `${baseURL}/api/v2/contact/`;
 
 const sanitizePhone = (input: string) => {
-  // Keep leading "+" if present, remove everything else non-digit
   const trimmed = input.trim();
   if (trimmed.startsWith("+")) {
     return "+" + trimmed.slice(1).replace(/\D/g, "");
@@ -44,7 +43,11 @@ const validate = (values: FormState): FormErrors => {
     errors.name = "Името е твърде дълго.";
   }
 
-  // Phone: required, + and digits, 7-15 digits total (E.164-like)
+  const university = values.university.trim();
+  if (!university) {
+    errors.university = "Моля, въведете университет.";
+  }
+  // Phone: required, + and digits, 7-15 digits total
   const phone = sanitizePhone(values.phone);
   if (!phone) {
     errors.phone = "Моля, въведете телефон.";
@@ -53,19 +56,13 @@ const validate = (values: FormState): FormErrors => {
       "Телефонът трябва да съдържа между 7 и 15 цифри (може да започва с +).";
   }
 
-  // Email: optional, but if present must be valid
+  // Email: required and must be valid
   const email = values.email.trim();
   if (email) {
-    // Simple, pragmatic regex (not RFC-perfect)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
     if (!emailRegex.test(email)) {
       errors.email = "Моля, въведете валиден имейл адрес.";
     }
-  }
-
-  // Inquiry: optional, length limited by component
-  if (values.inquiry.length > 500) {
-    errors.inquiry = "Съобщението е твърде дълго (макс. 500 символа).";
   }
 
   return errors;
@@ -76,9 +73,9 @@ export const Inquiry = () => {
 
   const [values, setValues] = useState<FormState>({
     name: "",
+    university: "",
     phone: "",
     email: "",
-    inquiry: "",
   });
 
   const [touched, setTouched] = useState<
@@ -96,29 +93,24 @@ export const Inquiry = () => {
     setTouched((t) => ({ ...t, [field]: true }));
   }, []);
 
-  const setField = useCallback(
-    (field: keyof FormState, value: string) => {
-      setValues((v) => {
-        let next = value;
-        if (field === "phone") {
-          // Soft-sanitize while typing: keep + and digits only
-          next = next.replace(/[^\d+]/g, "");
-          // Prevent multiple '+' in the middle
-          if (next.indexOf("+") > 0) next = next.replace(/\+/g, "");
-        }
-        return { ...v, [field]: next };
-      });
-    },
-    [touched, values]
-  );
+  const setField = useCallback((field: keyof FormState, value: string) => {
+    setValues((v) => {
+      let next = value;
+      if (field === "phone") {
+        next = next.replace(/[^\d+]/g, "");
+        if (next.indexOf("+") > 0) next = next.replace(/\+/g, "");
+      }
+      return { ...v, [field]: next };
+    });
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     const finalErrors = validate(values);
     setTouched({
       name: true,
+      university: true,
       phone: true,
-      email: touched.email || !!values.email, // touch email if it's filled
-      inquiry: touched.inquiry || !!values.inquiry,
+      email: true,
     });
 
     if (Object.keys(finalErrors).length > 0) {
@@ -131,34 +123,36 @@ export const Inquiry = () => {
 
     setSubmitting(true);
 
-    // Build payload with trimmed/sanitized values
     const payload = {
       name: values.name.trim(),
+      university: values.university.trim(),
       phone: sanitizePhone(values.phone),
-      email: values.email.trim() || undefined,
-      inquiry: values.inquiry.trim() || undefined,
+      email: values.email.trim(),
     };
 
-    // Timeout guard
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
     try {
       const res = await fetch(ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Token ${AUTHORIZATION_TOKEN}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(payload),
-        signal: controller.signal,
       });
 
       clearTimeout(timeoutId);
 
-      const text = await res.text();
       if (!res.ok) {
-        throw new Error(text || `HTTP ${res.status}`);
+        const errorText = await res.text();
+        throw new Error(
+          `Грешка: ${res.status} - ${res.statusText || errorText}`
+        );
       }
 
-      setValues({ name: "", phone: "", email: "", inquiry: "" });
+      setValues({ name: "", university: "", phone: "", email: "" });
       setTouched({});
       SheetManager.hide("inquiry");
       Alert.alert("Успех", "Запитването беше изпратено успешно.");
@@ -166,19 +160,20 @@ export const Inquiry = () => {
       const isAbort = err?.name === "AbortError";
       Alert.alert(
         "Грешка",
-        "Възникна грешка при изпращане. Моля, опитайте отново."
+        isAbort
+          ? "Заявката отне твърде дълго време. Моля, опитайте отново."
+          : err.message ||
+              "Възникна грешка при изпращане. Моля, опитайте отново."
       );
       console.error("Submit error:", err);
     } finally {
       setSubmitting(false);
       clearTimeout(timeoutId);
     }
-  }, [values, touched]);
+  }, [values]);
 
   const getError = (field: keyof FormState) =>
-    touched[field] || field === "email" || field === "inquiry"
-      ? currentErrors[field]
-      : undefined;
+    touched[field] ? currentErrors[field] : undefined;
 
   return (
     <ActionSheet
@@ -214,6 +209,29 @@ export const Inquiry = () => {
           <View className="mb-3" />
         )}
 
+        {/* University */}
+        <TextInput
+          className={`h-12 border rounded-xl px-4 text-base bg-gray-50 mb-1 ${
+            getError("university") ? "border-red-500" : "border-gray-300"
+          } text-black`}
+          placeholder="Университет*"
+          placeholderTextColor="#999"
+          value={values.university}
+          onChangeText={(t) => setField("university", t)}
+          onBlur={() => onBlur("university")}
+          autoCapitalize="words"
+          maxLength={150}
+          returnKeyType="next"
+          accessibilityLabel="Университет"
+        />
+        {getError("university") ? (
+          <Text className="text-red-400 text-xs mb-3">
+            {getError("university")}
+          </Text>
+        ) : (
+          <View className="mb-3" />
+        )}
+
         {/* Phone */}
         <TextInput
           className={`h-12 border rounded-xl px-4 text-base bg-gray-50 mb-1 ${
@@ -221,11 +239,10 @@ export const Inquiry = () => {
           } text-black`}
           placeholder="Телефон*"
           placeholderTextColor="#999"
-          // keyboardType="phone-pad"
           value={values.phone}
           onChangeText={(t) => setField("phone", t)}
           onBlur={() => onBlur("phone")}
-          maxLength={16} // + 15 digits
+          maxLength={16}
           returnKeyType="next"
           accessibilityLabel="Телефон"
         />
@@ -242,42 +259,16 @@ export const Inquiry = () => {
           } text-black`}
           placeholder="Email"
           placeholderTextColor="#999"
-          // keyboardType="email-address"
           autoCapitalize="none"
           value={values.email}
           onChangeText={(t) => setField("email", t)}
           onBlur={() => onBlur("email")}
           maxLength={120}
-          returnKeyType="next"
+          returnKeyType="done"
           accessibilityLabel="Имейл"
         />
         {getError("email") ? (
           <Text className="text-red-400 text-xs mb-3">{getError("email")}</Text>
-        ) : (
-          <View className="mb-3" />
-        )}
-
-        {/* Inquiry */}
-        <TextInput
-          className={`border rounded-xl px-4 text-base bg-gray-50 mb-2 ${
-            getError("inquiry") ? "border-red-500" : "border-gray-300"
-          } text-black`}
-          placeholder="Запитване (не е задължително)"
-          placeholderTextColor="#999"
-          multiline
-          numberOfLines={4}
-          textAlignVertical="top"
-          style={{ height: 100 }}
-          maxLength={500}
-          value={values.inquiry}
-          onChangeText={(t) => setField("inquiry", t)}
-          onBlur={() => onBlur("inquiry")}
-          accessibilityLabel="Запитване"
-        />
-        {getError("inquiry") ? (
-          <Text className="text-red-400 text-xs mb-3">
-            {getError("inquiry")}
-          </Text>
         ) : (
           <View className="mb-3" />
         )}
