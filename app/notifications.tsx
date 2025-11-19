@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Platform,
+  Linking,
+  Alert,
+  AppState,
+} from "react-native";
 import * as Notifications from "expo-notifications";
 import { MMKV } from "react-native-mmkv";
 import Animated, {
@@ -8,50 +16,108 @@ import Animated, {
   withTiming,
   interpolateColor,
 } from "react-native-reanimated";
+import { registerForPushNotificationsAsync } from "@/lib/registerForPushNotifications";
 
 const storage = new MMKV();
 
 function NotificationSettings() {
   const [isEnabled, setIsEnabled] = React.useState(false);
   const animatedValue = useSharedValue(0);
+  const appState = React.useRef(AppState.currentState);
 
-  // Check actual device permission status on mount
   React.useEffect(() => {
     checkPermissionStatus();
+
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === "active"
+      ) {
+        checkPermissionStatus();
+      }
+      appState.current = nextAppState;
+    });
+
+    return () => {
+      subscription.remove();
+    };
   }, []);
+
+  React.useEffect(() => {
+    animatedValue.value = withTiming(isEnabled ? 1 : 0, { duration: 300 });
+  }, [isEnabled]);
 
   const checkPermissionStatus = async () => {
     const { status } = await Notifications.getPermissionsAsync();
     const hasPermission = status === "granted";
     setIsEnabled(hasPermission);
     storage.set("notifications", hasPermission);
-    animatedValue.value = hasPermission ? 1 : 0;
+
+    if (!hasPermission) {
+      storage.delete("hasAskedNotificationPermission");
+    }
   };
 
   const toggle = async () => {
     const newValue = !isEnabled;
 
     if (newValue) {
-      // Request permission - shows system dialog
-      const { status } = await Notifications.requestPermissionsAsync();
+      const { status, canAskAgain } = await Notifications.getPermissionsAsync();
 
       if (status === "granted") {
         setIsEnabled(true);
-        storage.set("notifications", true);
-        animatedValue.value = withTiming(1, { duration: 300 });
-      } else {
-        setIsEnabled(false);
-        storage.set("notifications", false);
-        animatedValue.value = withTiming(0, { duration: 300 });
+        return;
       }
+
+      if (!canAskAgain) {
+        Alert.alert(
+          "Включване на известия",
+          "Моля, включете известията в настройките на устройството си",
+          [
+            { text: "Отказ", style: "cancel" },
+            {
+              text: "Отвори настройки",
+              onPress: () => {
+                if (Platform.OS === "ios") {
+                  Linking.openURL("app-settings:");
+                } else {
+                  Linking.openSettings();
+                }
+              },
+            },
+          ]
+        );
+        return;
+      }
+
+      registerForPushNotificationsAsync().then((token) => {
+        if (token) {
+          setIsEnabled(true);
+        } else {
+          setIsEnabled(false);
+        }
+      });
     } else {
-      setIsEnabled(false);
-      storage.set("notifications", false);
-      animatedValue.value = withTiming(0, { duration: 300 });
+      Alert.alert(
+        "Изключване на известия",
+        "Моля, изключете известията в настройките на устройството си",
+        [
+          { text: "Отказ", style: "cancel" },
+          {
+            text: "Отвори настройки",
+            onPress: () => {
+              if (Platform.OS === "ios") {
+                Linking.openURL("app-settings:");
+              } else {
+                Linking.openSettings();
+              }
+            },
+          },
+        ]
+      );
     }
   };
 
-  // Animated track (background)
   const trackStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       animatedValue.value,
@@ -64,12 +130,9 @@ function NotificationSettings() {
     };
   });
 
-  // Animated thumb (circle)
   const thumbStyle = useAnimatedStyle(() => {
-    const translateX = animatedValue.value * 24;
-
     return {
-      transform: [{ translateX }],
+      transform: [{ translateX: animatedValue.value * 24 }],
     };
   });
 

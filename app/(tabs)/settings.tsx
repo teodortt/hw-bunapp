@@ -7,7 +7,12 @@ import { ScrollView } from "react-native-gesture-handler";
 import { BookOpen, Shield, Star } from "@/lib/icons";
 import * as WebBrowser from "expo-web-browser";
 
-import { BadgeDollarSign, FileQuestion, PenBox } from "lucide-react-native";
+import {
+  AlertCircle,
+  BadgeDollarSign,
+  FileQuestion,
+  PenBox,
+} from "lucide-react-native";
 import { router } from "expo-router";
 
 export default function Settings() {
@@ -73,8 +78,8 @@ export default function Settings() {
           onPress={() => openStoreReview()}
         /> */}
         <ListItem
-          itemLeft={(props) => <FileQuestion color="white" />}
-          label="Нотификации"
+          itemLeft={(props) => <AlertCircle color="white" />}
+          label="Известия"
           className="rounded-t-lg"
           onPress={() => router.push("/notifications")}
         />

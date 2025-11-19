@@ -24,53 +24,68 @@ export async function registerForPushNotificationsAsync() {
     });
   }
 
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
-      );
+  if (!Device.isDevice) {
+    handleRegistrationError("Must use physical device for push notifications");
+    return;
+  }
+
+  const { status } = await Notifications.getPermissionsAsync();
+
+  if (status === "granted") {
+    return await getAndSaveToken();
+  }
+
+  const hasAskedBefore = storage.getBoolean("hasAskedNotificationPermission");
+
+  if (status === "denied" && hasAskedBefore) {
+    console.log("⚠️ User denied notifications before, not asking again");
+    return;
+  }
+
+  if (status === "undetermined" || !hasAskedBefore) {
+    const { status: newStatus } = await Notifications.requestPermissionsAsync();
+
+    storage.set("hasAskedNotificationPermission", true);
+
+    if (newStatus === "granted") {
+      return await getAndSaveToken();
+    } else {
+      console.log("⚠️ User denied notifications");
       return;
     }
+  }
+}
 
-    try {
-      const projectId = Constants.expoConfig?.extra?.eas?.projectId;
-      const pushTokenString = (
-        await Notifications.getExpoPushTokenAsync({ projectId })
-      ).data;
+async function getAndSaveToken() {
+  try {
+    const projectId = Constants.expoConfig?.extra?.eas?.projectId;
+    const pushTokenString = (
+      await Notifications.getExpoPushTokenAsync({ projectId })
+    ).data;
 
-      const deviceId = await getDeviceId();
+    const deviceId = await getDeviceId();
 
-      const sentToken = storage.getString("pushTokenSent");
-      if (sentToken === pushTokenString) {
-        console.log("✅ Token already sent, skipping");
-        return pushTokenString;
-      }
-
-      await saveTokenToGoogleSheet(pushTokenString, {
-        platform: Platform.OS,
-        deviceId: deviceId,
-        model: Device.modelName || "unknown",
-        osVersion: Device.osVersion || "unknown",
-      }).then(() => {
-        storage.set("pushTokenSent", pushTokenString);
-      });
-
+    const sentToken = storage.getString("pushTokenSent");
+    if (sentToken === pushTokenString) {
+      console.log("✅ Token already sent, skipping");
       return pushTokenString;
-    } catch (e: unknown) {
-      console.error("❌ Error details:", e);
-      if (e instanceof Error) {
-        console.error("Error message:", e.message);
-      }
-      handleRegistrationError(`${e}`);
     }
-  } else {
-    handleRegistrationError("Must use physical device for push notifications");
+
+    await saveTokenToGoogleSheet(pushTokenString, {
+      platform: Platform.OS,
+      deviceId: deviceId,
+      model: Device.modelName || "unknown",
+      osVersion: Device.osVersion || "unknown",
+    }).then(() => {
+      storage.set("pushTokenSent", pushTokenString);
+    });
+
+    return pushTokenString;
+  } catch (e: unknown) {
+    console.error("❌ Error details:", e);
+    if (e instanceof Error) {
+      console.error("Error message:", e.message);
+    }
+    handleRegistrationError(`${e}`);
   }
 }
