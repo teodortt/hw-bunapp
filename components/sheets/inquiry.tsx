@@ -183,7 +183,7 @@ export const Inquiry = () => {
       gestureEnabled
       indicatorStyle={{ width: 0 }}
       safeAreaInsets={insets}
-      containerStyle={{ height: 420, backgroundColor: "#232533" }}
+      containerStyle={{ height: 400, backgroundColor: "#232533" }}
     >
       <View className="h-full bg-[#232533] px-6 justify-start">
         <Text className="text-2xl font-semibold text-center pb-8 text-white">
@@ -259,7 +259,7 @@ export const Inquiry = () => {
           className={`h-12 border rounded-xl px-4 text-base bg-gray-50 mb-1 ${
             getError("email") ? "border-red-500" : "border-gray-300"
           } text-black`}
-          placeholder="Email"
+          placeholder="Email*"
           placeholderTextColor="#999"
           autoCapitalize="none"
           value={values.email}
