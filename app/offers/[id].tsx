@@ -85,7 +85,13 @@ export default function OfferDetailsScreen() {
 
         {/* Employer */}
         <View className="flex-row justify-between items-center">
-          <Text className="text-xl font-semibold">{offer.employer}</Text>
+          <Text
+            className="text-xl font-semibold flex-1 mr-2"
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
+            {offer.employer}
+          </Text>
           <TouchableOpacity onPress={handleFavoriteToggle}>
             <HeartIcon
               color={"#161622"}
