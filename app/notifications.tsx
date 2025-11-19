@@ -66,10 +66,10 @@ function NotificationSettings() {
 
   // Animated thumb (circle)
   const thumbStyle = useAnimatedStyle(() => {
-    const translateX = animatedValue.value * 24; // Move 24px when enabled
+    const translateX = animatedValue.value * 24;
 
     return {
-      transform: [{ translateX: withTiming(translateX, { duration: 300 }) }],
+      transform: [{ translateX }],
     };
   });
 
