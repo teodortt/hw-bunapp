@@ -14,6 +14,9 @@ import { getItem, setItem } from "@/lib/storage";
 import { Platform } from "react-native";
 import { SheetProvider } from "react-native-actions-sheet";
 import "../components/sheets/sheets";
+import { Header } from "@/components/shared/components/header";
+import * as Notifications from "expo-notifications";
+import { registerForPushNotificationsAsync } from "@/lib/registerForPushNotifications";
 
 const NAV_FONT_FAMILY = "Inter";
 const LIGHT_THEME: Theme = {
@@ -73,9 +76,41 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before getting the color scheme.
 SplashScreen.preventAutoHideAsync();
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  }),
+});
+
 export default function RootLayout() {
   const { colorScheme, setColorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        console.log({ token });
+      })
+      .catch((error: any) => console.log(error));
+
+    const notificationListener = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log(notification);
+      }
+    );
+
+    const responseListener =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      notificationListener.remove();
+      responseListener.remove();
+    };
+  }, []);
 
   React.useEffect(() => {
     (async () => {
@@ -116,19 +151,63 @@ export default function RootLayout() {
           <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheetModalProvider>
               <SheetProvider>
-                <Stack>
+                <Stack screenOptions={{ animation: "ios_from_right" }}>
                   <Stack.Screen
                     name="(tabs)"
                     options={{ headerShown: false }}
                   />
 
                   <Stack.Screen
+                    name="offers/[id]"
                     options={{
                       headerShadowVisible: false,
-                      headerTitle: "",
                       headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
                     }}
-                    name="offers/[id]"
+                  />
+
+                  <Stack.Screen
+                    name="steps"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="cost"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="faq"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+
+                  <Stack.Screen
+                    name="policy"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="notifications"
+                    options={{
+                      headerShadowVisible: false,
+                      headerBackTitle: "Назад",
+                      header: () => <Header backButton />,
+                    }}
                   />
                 </Stack>
               </SheetProvider>

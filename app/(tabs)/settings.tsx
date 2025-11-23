@@ -4,12 +4,16 @@ import List, { ListHeader } from "@/components/ui/list";
 import ListItem from "@/components/ui/list-item";
 import { Muted } from "@/components/ui/typography";
 import { ScrollView } from "react-native-gesture-handler";
-import { Archive, Bell, BookOpen, Send, Shield, Star } from "@/lib/icons";
+import { BookOpen, Shield, Star } from "@/lib/icons";
 import * as WebBrowser from "expo-web-browser";
 
-import { ThemeSettingItem } from "@/components/settings/ThemeItem";
-import { NotificationItem } from "@/components/settings/NotificationItem";
-import { SheetManager } from "react-native-actions-sheet";
+import {
+  AlertCircle,
+  BadgeDollarSign,
+  FileQuestion,
+  PenBox,
+} from "lucide-react-native";
+import { router } from "expo-router";
 
 export default function Settings() {
   const openExternalURL = (url: string) => {
@@ -19,38 +23,77 @@ export default function Settings() {
       WebBrowser.openBrowserAsync(url);
     }
   };
+
+  const openStoreReview = () => {
+    const appStoreId = "1234567890"; // iOS App Store ID
+    const packageName = "com.yourapp.package"; // Android package name
+
+    if (Platform.OS === "ios") {
+      Linking.openURL(
+        `itms-apps://itunes.apple.com/app/id${appStoreId}?action=write-review`
+      );
+    } else {
+      Linking.openURL(`market://details?id=${packageName}`).catch(() => {
+        Linking.openURL(
+          `https://play.google.com/store/apps/details?id=${packageName}`
+        );
+      });
+    }
+  };
+
   return (
-    <ScrollView className="flex-1 w-full px-6 bg-background pt-4 gap-y-6">
+    <ScrollView className="flex-1 w-full px-6 bg-primary pt-4 gap-y-6">
       <List>
         <ListHeader>
-          <Muted>App</Muted>
+          <Muted>Work & Travel</Muted>
         </ListHeader>
-        <ThemeSettingItem />
-        {Platform.OS !== "web" && <NotificationItem />}
+
+        <ListItem
+          itemLeft={(props) => <PenBox color="white" />}
+          label="Записване и документи"
+          className="rounded-t-lg"
+          onPress={() => router.push("/steps")}
+        />
+        <ListItem
+          itemLeft={(props) => <BadgeDollarSign color="white" />}
+          label="Цена на услугата"
+          className="rounded-t-lg"
+          onPress={() => router.push("/cost")}
+        />
+        <ListItem
+          itemLeft={(props) => <FileQuestion color="white" />}
+          label="Често задавани въпроси"
+          className="rounded-t-lg"
+          onPress={() => router.push("/faq")}
+        />
+        {/* <ThemeSettingItem /> */}
+        {/* {Platform.OS !== "web" && <NotificationItem />} */}
         <ListHeader className="pt-8">
-          <Muted>GENERAL</Muted>
+          <Muted>Общи</Muted>
         </ListHeader>
-        <ListItem
+        {/* <ListItem
           itemLeft={(props) => <Star {...props} />} // props adds size and color attributes
-          label="Give us a start"
-          // onPress={() => openExternalURL("https://github.com/expo-starter/expo-template")}
-          onPress={() => SheetManager.show("testSheet2")}
+          label="Оценете приложението"
+          className="rounded-t-lg"
+          onPress={() => openStoreReview()}
+        /> */}
+        <ListItem
+          itemLeft={(props) => <AlertCircle color="white" />}
+          label="Известия"
+          className="rounded-t-lg"
+          onPress={() => router.push("/notifications")}
         />
         <ListItem
-          itemLeft={(props) => <Send {...props} />} // props adds size and color attributes
-          label="Send Feedback"
-          onPress={() => openExternalURL("https://expostarter.com")}
+          itemLeft={(props) => <BookOpen {...props} />}
+          label="Общи условия"
+          onPress={() => router.push("/policy")}
+          // onPress={() => openExternalURL("https://www.happyworld.bg/terms/")}
         />
-        <ListItem
-          itemLeft={(props) => <Shield {...props} />} // props adds size and color attributes
-          label="Privacy Policy"
+        {/* <ListItem
+          itemLeft={(props) => <Shield {...props} />}
+          label="Декларация за поверителност"
           onPress={() => openExternalURL("https://expostarter.com")}
-        />
-        <ListItem
-          itemLeft={(props) => <BookOpen {...props} />} // props adds size and color attributes
-          label="Terms of service"
-          onPress={() => openExternalURL("https://expostarter.com")}
-        />
+        /> */}
       </List>
     </ScrollView>
   );
